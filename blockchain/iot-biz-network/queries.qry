@@ -1,0 +1,30 @@
+/** Queries for the IoT business network
+*/
+
+query selectSensorsByOwner {
+	description: "Select sensors by owner"
+	statement:
+		SELECT iot.biznet.Sensor
+			WHERE (deviceOwner == _$deviceOwner)
+}
+
+query selectActuatorsByOwner {
+	description: "Select actuators by owner"
+	statement:
+		SELECT iot.biznet.Actuator
+			WHERE (deviceOwner == _$deviceOwner)
+}
+
+query selectSensorsById {
+	description: "Select sensors by id"
+	statement:
+		SELECT iot.biznet.Sensor
+			WHERE (deviceId == _$deviceId)
+}
+
+query selectActuatorsById {
+	description: "Select actuators by id"
+	statement:
+		SELECT iot.biznet.Actuator
+			WHERE (deviceId == _$deviceId)
+}
