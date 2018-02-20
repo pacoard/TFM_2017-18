@@ -1,19 +1,101 @@
 /**
- * Write your model definitions here
+ * IoT business network model definitions
+ *
+ * https://ibm-blockchain.github.io/develop/reference/cto_language.html
  */
 
 namespace iot.biznet
 
-participant User identified by email {
+/**
+ * PARTICIPANTS
+ *
+ */
+participant DeviceOwner identified by email {
   o String email
+  o String name optional
+  o String phone optional
 }
 
-asset SampleAsset identified by assetId {
-  o String assetId
-  o String value
+/**
+ * ASSETS
+ *
+ */
+abstract asset Device identified by deviceId {
+  o String deviceId
+  --> DeviceOwner deviceOwner
+}
+asset Sensor extends Device {
+  o Reading[] data optional
+  o String unit
+  o Integer eventThreshold optional
+}
+asset Actuator extends Device {
+  o String state optional
+  o Boolean enabled default=false optional
 }
 
-transaction ChangeAssetValue {
-  o String newValue
-  --> Asset relatedAsset
+/**
+ * TRANSACTIONS
+ *
+ */
+transaction CreateDevice {
+  o String deviceId
+  o DeviceType deviceType
+  o String unit optional
+  o Integer eventThreshold optional
+  o String state optional
+  o Boolean enabled optional
+  --> DeviceOwner deviceOwner
+}
+transaction DeleteSensor {
+  --> Sensor device
+  --> DeviceOwner deviceOwner
+}
+transaction DeleteActuator {
+  --> Actuator device
+  --> DeviceOwner deviceOwner
+}
+transaction SensorReading {
+  o Reading reading
+  --> Sensor sensor
+  --> DeviceOwner deviceOwner
+}
+transaction ActuatorWrite {
+  o String newState optional
+  o Boolean enabled optional
+  --> Actuator actuator
+  --> DeviceOwner deviceOwner
+}
+
+/**
+ * EVENTS
+ *
+ */
+event SensorEvent {
+  o String sensorId
+  o String description
+}
+
+event ActuatorEvent {
+  o String actuatorId
+  o String eventCode optional
+  o String newState
+  o Boolean enabled
+  o String description optional
+}
+event LogEvent {
+	o String msg
+}
+
+/**
+ * OTHER DEFINITIONS
+ *
+ */
+concept Reading {
+    o DateTime timestamp
+    o Integer value
+}
+enum DeviceType {
+  o SENSOR
+  o ACTUATOR
 }
