@@ -33,8 +33,8 @@ class Dashboard extends React.Component {
 	}
 	render() {
 		return (
-            <div className="content">
-                <div className="container-fluid">
+		    <div className="row">
+                <div className="col-md-12">
                     <div className="row">
                         <div className="col-lg-3 col-sm-6">
                             <div className="card">
@@ -53,7 +53,7 @@ class Dashboard extends React.Component {
                                         </div>
                                     </div>
                                     <div className="footer">
-                                        
+
                                         <div className="stats">
                                             <i className="ti-reload"></i> Updated now
                                         </div>
@@ -78,7 +78,7 @@ class Dashboard extends React.Component {
                                         </div>
                                     </div>
                                     <div className="footer">
-                                        
+
                                         <div className="stats">
                                             <i className="ti-calendar"></i> Last day
                                         </div>
@@ -103,7 +103,7 @@ class Dashboard extends React.Component {
                                         </div>
                                     </div>
                                     <div className="footer">
-                                        
+
                                         <div className="stats">
                                             <i className="ti-timer"></i> In the last hour
                                         </div>
@@ -117,7 +117,7 @@ class Dashboard extends React.Component {
                                     <div className="row">
                                         <div className="col-xs-5">
                                             <div className="icon-big icon-info text-center">
-                                                <i className="ti-twitter-alt"></i>
+                                                <i className="fa fa-twitter text-info"></i>
                                             </div>
                                         </div>
                                         <div className="col-xs-7">
@@ -128,7 +128,7 @@ class Dashboard extends React.Component {
                                         </div>
                                     </div>
                                     <div className="footer">
-                                        
+
                                         <div className="stats">
                                             <i className="ti-reload"></i> Updated now
                                         </div>
@@ -138,7 +138,7 @@ class Dashboard extends React.Component {
                         </div>
                     </div>
                     <div className="row">
-            
+
                         <div className="col-md-12">
                             <div className="card">
                                 <div className="header">
@@ -153,7 +153,7 @@ class Dashboard extends React.Component {
                                             <i className="fa fa-circle text-danger"></i> Click
                                             <i className="fa fa-circle text-warning"></i> Click Second Time
                                         </div>
-                                        
+
                                         <div className="stats">
                                             <i className="ti-reload"></i> Updated 3 minutes ago
                                         </div>
@@ -171,14 +171,14 @@ class Dashboard extends React.Component {
                                 </div>
                                 <div className="content">
                                     <div id="chartPreferences" className="ct-chart ct-perfect-fourth"></div>
-            
+
                                     <div className="footer">
                                         <div className="chart-legend">
                                             <i className="fa fa-circle text-info"></i> Open
                                             <i className="fa fa-circle text-danger"></i> Bounce
                                             <i className="fa fa-circle text-warning"></i> Unsubscribe
                                         </div>
-                                        
+
                                         <div className="stats">
                                             <i className="ti-timer"></i> Campaign sent 2 days ago
                                         </div>
@@ -194,13 +194,13 @@ class Dashboard extends React.Component {
                                 </div>
                                 <div className="content">
                                     <div id="chartActivity" className="ct-chart"></div>
-            
+
                                     <div className="footer">
                                         <div className="chart-legend">
                                             <i className="fa fa-circle text-info"></i> Tesla Model S
                                             <i className="fa fa-circle text-warning"></i> BMW 5 Series
                                         </div>
-                                        
+
                                         <div className="stats">
                                             <i className="ti-check"></i> Data information certified
                                         </div>

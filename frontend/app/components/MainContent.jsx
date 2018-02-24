@@ -4,6 +4,7 @@ import { selectSideElement, switchUser} from '../reducers/actions'
 import { REST_SERVER } from '../constants/constants'
 import Dashboard from './Dashboard'
 import Sensors from './Sensors'
+import Actuators from './Actuators'
 
 class MainContent extends React.Component {
 	constructor(props) {
@@ -27,6 +28,9 @@ class MainContent extends React.Component {
 					case 'Sensors':
 						currentContent = <Sensors />
 						break;
+					case 'Actuators':
+						currentContent = <Actuators />
+						break;
 					default:
 						break;
 				}
@@ -35,14 +39,10 @@ class MainContent extends React.Component {
 
 		return (
 			<div className="content">
-            <div className="container-fluid">
-                <div className="row">
-                    <div className="col-md-12">
+                <div className="container-fluid">
                         {currentContent}
-                    </div>
                 </div>
             </div>
-        </div>
 		);
 	}
 }

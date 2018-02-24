@@ -1,10 +1,10 @@
 //https://themify.me/themify-icons
 export const SIDE_ELEMENTS = [
-	{name: "Dashboard", 	link: "#", icon: "pe-7s-science", 	selected: false},
+	{name: "Dashboard", 	link: "#", icon: "pe-7s-home", 		selected: false},
 	{name: "Sensors", 		link: "#", icon: "pe-7s-timer", 	selected: false},
 	{name: "Actuators", 	link: "#", icon: "pe-7s-light", 	selected: false},
 	{name: "Add Device", 	link: "#", icon: "pe-7s-plus", 	 	selected: false},
-	{name: "Delete Device", link: "#", icon: "pe-7s-trash", 	 	selected: false},
+	{name: "Delete Device", link: "#", icon: "pe-7s-trash", 	selected: false},
 	{name: "Notifications", link: "#", icon: "pe-7s-bell", 		selected: false},
 ];
 
