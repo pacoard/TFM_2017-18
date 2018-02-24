@@ -13,7 +13,6 @@ class App extends React.Component {
 		this.currentElement = "Welcome";
 		this.props.store.subscribe(()=> {
 			this.props.sideElements.forEach((e) => {
-				console.log(e);
 				if (e.selected) {
 					this.currentElement = e.name;
 				}

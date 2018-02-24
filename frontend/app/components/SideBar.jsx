@@ -15,11 +15,14 @@ class SideBar extends React.Component {
 	}
 	render() {
 		return ( //<!-- className="active" -->
-			<div className="sidebar" data-background-color="white" data-active-color="danger">
+			<div className="sidebar" data-color="black" data-image="assets/img/sidebar-5.jpg">
 		    	<div className="sidebar-wrapper">
 		            <div className="logo">
 		                <a href="#" className="simple-text">
-							{APP_NAME}
+							<img src="assets/img/reactlogo.png" alt="React Logo" width="42" height="30"/>
+							SMART
+							<img src="assets/img/hyperledger-logo.png" alt="Hyperledger Logo" width="42" height="42"/>
+							HOME
 		                </a>
 		            </div>
 		            <ul className="nav">

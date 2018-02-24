@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {REST_SERVER} from "../constants/constants";
+import {REST_SERVER, DEVICE_OWNER_NAMESPACE} from "../constants/constants";
+
+import {DEFAULT_USER} from "../constants/constants";
 
 class Sensors extends React.Component {
     constructor(props) {
@@ -11,40 +13,49 @@ class Sensors extends React.Component {
 	}
 
 	componentDidMount() {
-		// Fetch polls from hyperledger REST API
+		// Fetch sensors from hyperledger REST API
 
-		fetch(REST_SERVER + '/iot.biznet.Sensor')
+		// http://192.168.0.8:3000/api/queries/selectSensorsByOwner?deviceOwner=resource:iot.biznet.DeviceOwner#pacoard@gmail.com
+		let url = REST_SERVER + '/queries/selectSensorsByOwner?deviceOwner=' + encodeURIComponent(DEVICE_OWNER_NAMESPACE +  DEFAULT_USER);
+		// http://192.168.0.8:3000/api/queries/selectSensorsByOwner?deviceOwner=resource%3Aiot.biznet.DeviceOwner%23pacoard%40gmail.com
+		console.log('Fetching URL: '+url);
+		fetch(url)
 		.then(result => {
 			return result.json();
 		}).then(data => {
-			let polls = data.map((poll,i) => {
+			console.log(data);
+			let sensorRows = data.map((sensor,i) => {
+				var eventThreshold = "N/A";
+				if (sensor.eventThreshold) eventThreshold = sensor.eventThreshold + " " + sensor.unit;
 				return(
-					<tr key={i}>
-                    	<td>{poll.pollId}</td>
-                    	<td>{poll.pollOwner.split("#")[1]}</td>
-                    	<td>{poll.pollObject.title}</td>
-                    	<td>{poll.pollObject.questions.length}</td>
+					<tr key={sensor.deviceId}>
+                    	<td>{sensor.deviceId}</td>
+                    	<td style={{"textAlign": "center"}}>{sensor.unit}</td>
+                    	<td style={{"textAlign": "center"}}>{sensor.data.length}</td>
+                    	<td style={{"textAlign": "center"}}>{eventThreshold}</td>
+						<td style={{"textAlign": "center"}}><i className="ti-close"></i></td>
                     </tr>
 				)
 			});
-			this.setState({tableRows: polls});
+			this.setState({tableRows: sensorRows});
 		})
 	}
 	render() {
 		return (
             <div className="card">
                 <div className="header">
-                    <h4 className="title">Polls in the blockchain</h4>
-                    <p className="category">List of polls that are currently stored in the distributed ledger</p>
+                    <h4 className="title">Registered sensors in the blockchain</h4>
+                    <p className="category">List of sensors that are currently stored in the distributed ledger</p>
                 </div>
                 <div className="content table-responsive table-full-width">
                     <table className="table table-striped">
                         <thead>
                         	<tr>
-	                            <th>ID</th>
-	                        	<th>Owner</th>
-	                        	<th>Title</th>
-	                        	<th>Questions</th>
+	                            <th>Device ID</th>
+	                        	<th>Unit</th>
+	                        	<th>Readings</th>
+								<th>Alarm Threshold</th>
+	                        	<th>Delete</th>
                         	</tr>
                         </thead>
                         <tbody>

@@ -47,7 +47,7 @@ class MainContent extends React.Component {
 	}
 }
 
-class NewPoll extends React.Component  {
+class AddDevice extends React.Component  {
 	constructor(props) {
 		super(props);
 		this.state = {formValues: null};
