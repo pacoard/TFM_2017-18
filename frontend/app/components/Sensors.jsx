@@ -1,8 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {REST_SERVER, DEVICE_OWNER_NAMESPACE} from "../constants/constants";
+import {REST_SERVER, DEVICE_OWNER_NAMESPACE} from "../constants/constants"
+import {DEFAULT_USER} from "../constants/constants"
 
-import {DEFAULT_USER} from "../constants/constants";
+// Graphs
+import ChartistGraph from 'react-chartist'
+
 
 class Sensors extends React.Component {
     constructor(props) {
@@ -117,17 +120,32 @@ class SensorGraph extends React.Component {
 			var sensor = data[0];
 			console.log(sensor);
 			let dataPoints = sensor.data.map((dataPoint,i) => {
+				console.log(dataPoint);
+				delete
 				dataPoint.value;
 				dataPoint.timestamp;
+				return
 			});
 			this.setState({
 				unit: sensor.unit,
-				dataPoints: dataPoints
+				dataPoints: sensor.data[0]
 			});
 		});
 	}
 
 	render() {
+
+		var lineChartData = {
+		  labels: [1, 2, 3, 4, 5, 6, 7, 8],
+		  series: [
+			[5, 9, 7, 8, 5, 3, 5, 4]
+		  ]
+		};
+		var lineChartOptions = {
+		  low: 0,
+		  showArea: true
+		};
+
 		return (
 			<div className="row">
 				<div className="card">
@@ -136,10 +154,10 @@ class SensorGraph extends React.Component {
 						<p className="category">All data stored in the distributed ledger</p>
 					</div>
 					<div className="content">
-						<div id="chartActivity" className="ct-chart"></div>
+						<ChartistGraph data={lineChartData} options={lineChartOptions} type={"Line"} />
 						<div className="footer">
 							<div className="chart-legend">
-								<i className="fa fa-circle text-info"></i> {this.props.unit}
+								<i className="fa fa-circle text-info"></i> {this.state.unit}
 								<i className="fa fa-circle text-warning"></i> BMW 5 Series
 							</div>
 							<hr/>
