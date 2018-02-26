@@ -1,11 +1,21 @@
 import React from 'react'
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux'
 import {REST_SERVER, DEVICE_OWNER_NAMESPACE} from "../constants/constants"
 import {DEFAULT_USER} from "../constants/constants"
 
 // Graphs
-import ChartistGraph from 'react-chartist'
-
+//import { ChartistGraph } from 'react-chartist'
+/*import {
+    Charts,
+    ChartContainer,
+    ChartRow,
+    YAxis,
+    LineChart,
+	Resizable
+} from "react-timeseries-charts";
+import { TimeSeries } from "pondjs";*/
+const ReactHighstock = require('react-highcharts/ReactHighstock.src');
 
 class Sensors extends React.Component {
     constructor(props) {
@@ -17,8 +27,10 @@ class Sensors extends React.Component {
 		this.deviceClick = this.deviceClick.bind(this);
 	}
 	deviceClick(e, t_deviceId) {
+    	console.log("Device click");
     	e.preventDefault();
 		this.setState({selectedDeviceId: t_deviceId});
+		console.log(t_deviceId);
 		this.forceUpdate();
 	}
 
@@ -59,7 +71,9 @@ class Sensors extends React.Component {
 	render() {
     	let graph = <a></a>;
 		if (this.state.selectedDeviceId) {
+			console.log(this.state.selectedDeviceId);
 			graph = <SensorGraph deviceId={this.state.selectedDeviceId}/>;
+			console.log(graph);
 		}
 		return (
 			<div className="col-md-12">
@@ -98,10 +112,7 @@ class SensorGraph extends React.Component {
 		super(props);
 		this.state = {
 			unit: "",
-			dataPoints: {
-				values: [],
-				dates: []
-            },
+			dataPoints: [],
 		};
 	}
 
@@ -119,32 +130,37 @@ class SensorGraph extends React.Component {
 			// The result will always be an array with one entry
 			var sensor = data[0];
 			console.log(sensor);
-			let dataPoints = sensor.data.map((dataPoint,i) => {
-				console.log(dataPoint);
-				delete
-				dataPoint.value;
-				dataPoint.timestamp;
-				return
-			});
+			let dataPoints = this.state.dataPoints;
+			sensor.data.forEach((p) => {
+				var d = new Date(p.timestamp);
+				dataPoints.push([d.getTime(), p.value]);
+				/*dataPoints.dates.push(new Date(p.timestamp));
+				dataPoints.values.push(p.value);*/
+			})
 			this.setState({
 				unit: sensor.unit,
-				dataPoints: sensor.data[0]
+				dataPoints: dataPoints
 			});
 		});
 	}
 
 	render() {
 
-		var lineChartData = {
-		  labels: [1, 2, 3, 4, 5, 6, 7, 8],
-		  series: [
-			[5, 9, 7, 8, 5, 3, 5, 4]
-		  ]
-		};
-		var lineChartOptions = {
-		  low: 0,
-		  showArea: true
-		};
+        let config = {
+            rangeSelector: {
+                selected: 1
+            },
+            title: {
+                text: '"'+this.props.deviceId+'" readings'
+            },
+            series: [{
+                name: 'this.props.deviceId',
+                data: this.state.dataPoints,
+                tooltip: {
+                  valueDecimals: 2
+                }
+            }]
+        };
 
 		return (
 			<div className="row">
@@ -154,7 +170,7 @@ class SensorGraph extends React.Component {
 						<p className="category">All data stored in the distributed ledger</p>
 					</div>
 					<div className="content">
-						<ChartistGraph data={lineChartData} options={lineChartOptions} type={"Line"} />
+						<ReactHighstock config={config}/>
 						<div className="footer">
 							<div className="chart-legend">
 								<i className="fa fa-circle text-info"></i> {this.state.unit}
