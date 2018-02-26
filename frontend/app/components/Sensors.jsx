@@ -1,20 +1,10 @@
 import React from 'react'
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux'
 import {REST_SERVER, DEVICE_OWNER_NAMESPACE} from "../constants/constants"
 import {DEFAULT_USER} from "../constants/constants"
 
 // Graphs
-//import { ChartistGraph } from 'react-chartist'
-/*import {
-    Charts,
-    ChartContainer,
-    ChartRow,
-    YAxis,
-    LineChart,
-	Resizable
-} from "react-timeseries-charts";
-import { TimeSeries } from "pondjs";*/
+
 const ReactHighstock = require('react-highcharts/ReactHighstock.src');
 
 class Sensors extends React.Component {
@@ -22,16 +12,17 @@ class Sensors extends React.Component {
 		super(props);
 		this.state = {
 			tableRows: [],
-			selectedDeviceId: undefined,
+            selectedDevice: '',
 		};
 		this.deviceClick = this.deviceClick.bind(this);
 	}
 	deviceClick(e, t_deviceId) {
+        e.preventDefault();
     	console.log("Device click");
-    	e.preventDefault();
-		this.setState({selectedDeviceId: t_deviceId});
-		console.log(t_deviceId);
-		this.forceUpdate();
+    	console.log(t_deviceId);
+    	this.setState({
+            selectedDevice: t_deviceId
+        })
 	}
 
 	componentDidMount() {
@@ -56,7 +47,7 @@ class Sensors extends React.Component {
                     	<td style={{"textAlign": "center"}}>{sensor.data.length}</td>
                     	<td style={{"textAlign": "center"}}>{eventThreshold}</td>
 						<td style={{"textAlign": "center"}}>
-							<a class="btn btn-simple btn-danger btn-icon remove"><i class="fa fa-times"></i></a>
+							<a className="btn btn-simple btn-danger btn-icon remove"><i className="fa fa-times"></i></a>
 						</td>
 
                     </tr>
@@ -64,17 +55,15 @@ class Sensors extends React.Component {
 			}); // <td style={{"textAlign": "center"}}><i className="ti-close"></i></td>
 			this.setState({
 				tableRows: sensorRows,
-				sensorGraph: this.state.sensorGraph,
+				//selectedDevice: this.state.selectedDevice,
 			});
-		})
+		});
 	}
 	render() {
-    	let graph = <a></a>;
-		if (this.state.selectedDeviceId) {
-			console.log(this.state.selectedDeviceId);
-			graph = <SensorGraph deviceId={this.state.selectedDeviceId}/>;
-			console.log(graph);
-		}
+        let graph = <a></a>;
+        if (this.state.selectedDevice) {
+            graph = <SensorGraph deviceId={this.state.selectedDevice} />;
+        }
 		return (
 			<div className="col-md-12">
 				{graph}
@@ -116,8 +105,8 @@ class SensorGraph extends React.Component {
 		};
 	}
 
-	componentDidMount() {
-		// Fetch sensors from hyperledger REST API
+	fetchData() {
+	    // Fetch sensors from hyperledger REST API
 
 		// http://192.168.0.8:3000/api/queries/selectSensorsByOwner?deviceOwner=resource:iot.biznet.DeviceOwner#pacoard@gmail.com
 		let url = REST_SERVER + '/queries/selectSensorById?deviceId=' + encodeURIComponent(this.props.deviceId);
@@ -130,7 +119,7 @@ class SensorGraph extends React.Component {
 			// The result will always be an array with one entry
 			var sensor = data[0];
 			console.log(sensor);
-			let dataPoints = this.state.dataPoints;
+			let dataPoints = [];
 			sensor.data.forEach((p) => {
 				var d = new Date(p.timestamp);
 				dataPoints.push([d.getTime(), p.value]);
@@ -142,24 +131,44 @@ class SensorGraph extends React.Component {
 				dataPoints: dataPoints
 			});
 		});
+    }
+
+	componentDidMount() {
+        this.fetchData();
 	}
+
+	componentWillReceiveProps(nextProps) {
+        // You don't have to do this check first, but it can help prevent an unneeded render
+        console.log('componentWillReceiveProps')
+        if (nextProps.startTime !== this.state.startTime) {
+            this.setState({ startTime: nextProps.startTime });
+        }
+        this.fetchData();
+    }
 
 	render() {
 
         let config = {
+            chart: { // https://api.highcharts.com/highcharts/chart
+                zoomType: 'x'
+            },
             rangeSelector: {
                 selected: 1
             },
+
             title: {
                 text: '"'+this.props.deviceId+'" readings'
             },
-            series: [{
-                name: 'this.props.deviceId',
-                data: this.state.dataPoints,
-                tooltip: {
-                  valueDecimals: 2
-                }
-            }]
+            series: [
+                {
+                    name: this.props.deviceId,
+                    data: this.state.dataPoints,
+                    tooltip: {
+                      valueDecimals: 2
+                    }
+                },
+            ],
+
         };
 
 		return (
@@ -170,7 +179,7 @@ class SensorGraph extends React.Component {
 						<p className="category">All data stored in the distributed ledger</p>
 					</div>
 					<div className="content">
-						<ReactHighstock config={config}/>
+						<ReactHighstock config={config}  ref="chart" isPureConfig />
 						<div className="footer">
 							<div className="chart-legend">
 								<i className="fa fa-circle text-info"></i> {this.state.unit}
