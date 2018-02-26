@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import {REST_SERVER, DEVICE_OWNER_NAMESPACE} from "../constants/constants"
 import {DEFAULT_USER} from "../constants/constants"
@@ -18,8 +19,6 @@ class Sensors extends React.Component {
 	}
 	deviceClick(e, t_deviceId) {
         e.preventDefault();
-    	console.log("Device click");
-    	console.log(t_deviceId);
     	this.setState({
             selectedDevice: t_deviceId
         })
@@ -36,7 +35,6 @@ class Sensors extends React.Component {
 		.then(result => {
 			return result.json();
 		}).then(data => {
-			console.log(data);
 			let sensorRows = data.map((sensor,i) => {
 				var eventThreshold = "N/A";
 				if (sensor.eventThreshold) eventThreshold = sensor.eventThreshold + " " + sensor.unit;
@@ -52,7 +50,7 @@ class Sensors extends React.Component {
 
                     </tr>
 				)
-			}); // <td style={{"textAlign": "center"}}><i className="ti-close"></i></td>
+			});
 			this.setState({
 				tableRows: sensorRows,
 				//selectedDevice: this.state.selectedDevice,
@@ -105,11 +103,16 @@ class SensorGraph extends React.Component {
 		};
 	}
 
-	fetchData() {
+	// Scroll up when renderization
+	componentDidUpdate() {
+		ReactDOM.findDOMNode(this).scrollIntoView();
+	}
+
+	fetchData(t_deviceId) {
 	    // Fetch sensors from hyperledger REST API
 
 		// http://192.168.0.8:3000/api/queries/selectSensorsByOwner?deviceOwner=resource:iot.biznet.DeviceOwner#pacoard@gmail.com
-		let url = REST_SERVER + '/queries/selectSensorById?deviceId=' + encodeURIComponent(this.props.deviceId);
+		let url = REST_SERVER + '/queries/selectSensorById?deviceId=' + encodeURIComponent(t_deviceId);
 		// http://192.168.0.8:3000/api/queries/selectSensorsByOwner?deviceOwner=resource%3Aiot.biznet.DeviceOwner%23pacoard%40gmail.com
 		console.log('Sensor Graph Fetching URL: '+url);
 		fetch(url)
@@ -118,7 +121,6 @@ class SensorGraph extends React.Component {
 		}).then(data => {
 			// The result will always be an array with one entry
 			var sensor = data[0];
-			console.log(sensor);
 			let dataPoints = [];
 			sensor.data.forEach((p) => {
 				var d = new Date(p.timestamp);
@@ -134,16 +136,15 @@ class SensorGraph extends React.Component {
     }
 
 	componentDidMount() {
-        this.fetchData();
+        this.fetchData(this.props.deviceId);
 	}
 
 	componentWillReceiveProps(nextProps) {
         // You don't have to do this check first, but it can help prevent an unneeded render
-        console.log('componentWillReceiveProps')
         if (nextProps.startTime !== this.state.startTime) {
             this.setState({ startTime: nextProps.startTime });
         }
-        this.fetchData();
+        this.fetchData(nextProps.deviceId);
     }
 
 	render() {
