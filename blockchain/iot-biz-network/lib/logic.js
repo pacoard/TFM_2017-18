@@ -136,14 +136,10 @@ function SensorReading(tx) {
                 var eventThreshold = factory.newEvent('iot.biznet', 'SensorEvent');
                 eventThreshold.sensorId = id;
                 eventThreshold.ownerEmail = tx.deviceOwner.email;
-                eventThreshold.description = 'Sensor with ID ' + id 
+                eventThreshold.msg = 'Sensor with ID ' + id 
                     + ' triggered an alarm: ' + tx.reading.value.toString() + ' ' + t_sensor.unit;
                 emit(eventThreshold);
             }
-            // Emit an event for the transaction
-            /*var event = factory.newEvent('iot.biznet', 'LogEvent');
-            event.msg = 'Sensor with id ' + id;
-            emit(event);*/
         });
 }
 
@@ -182,12 +178,8 @@ function ActuatorWrite(tx) {
             actuatorEvent.newState = t_actuator.state;
             actuatorEvent.enabled = t_actuator.enabled;
             actuatorEvent.ownerEmail = tx.deviceOwner.email;
-            actuatorEvent.description = 'Actuator with ID ' + id + ' changed its state: ' 
+            actuatorEvent.msg = 'Actuator with ID ' + id + ' changed its state: ' 
                 + '[NewState] '+  t_actuator.state + ', [Enabled] ' + t_actuator.enabled.toString();
             emit(actuatorEvent);
-            // Emit an event for the transaction
-            var event = factory.newEvent('iot.biznet', 'LogEvent');
-            event.msg = 'ActuatorWrite';
-            emit(event);
         });
 }

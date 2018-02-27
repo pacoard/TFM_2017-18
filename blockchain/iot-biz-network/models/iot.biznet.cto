@@ -74,7 +74,7 @@ transaction ActuatorWrite {
 event SensorEvent {
   o String sensorId
   o String ownerEmail
-  o String description
+  o String msg
 }
 
 event ActuatorEvent {
@@ -83,7 +83,7 @@ event ActuatorEvent {
   o String newState optional
   o Boolean enabled
   o String ownerEmail
-  o String description optional
+  o String msg optional
 }
 event LogEvent {
 	o String ownerEmail
