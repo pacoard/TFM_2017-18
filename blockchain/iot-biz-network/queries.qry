@@ -15,14 +15,14 @@ query selectActuatorsByOwner {
 			WHERE (deviceOwner == _$deviceOwner)
 }
 
-query selectSensorsById {
-	description: "Select sensors by id"
+query selectSensorById {
+	description: "Select sensor by id"
 	statement:
 		SELECT iot.biznet.Sensor
 			WHERE (deviceId == _$deviceId)
 }
 
-query selectActuatorsById {
+query selectActuatorById {
 	description: "Select actuators by id"
 	statement:
 		SELECT iot.biznet.Actuator

@@ -133,6 +133,7 @@ function SensorReading(tx) {
             if (t_sensor.eventThreshold && tx.reading.value > t_sensor.eventThreshold) {
                 var eventThreshold = factory.newEvent('iot.biznet', 'SensorEvent');
                 eventThreshold.sensorId = id;
+                eventThreshold.ownerEmail = tx.deviceOwner.email;
                 eventThreshold.description = 'Sensor with id ' + id 
                     + ' triggered an alarm: ' + tx.reading.value.toString() + ' ' + t_sensor.unit;
                 emit(eventThreshold);
@@ -178,6 +179,7 @@ function ActuatorWrite(tx) {
             actuatorEvent.actuatorId = id;
             actuatorEvent.newState = t_actuator.state;
             actuatorEvent.enabled = t_actuator.enabled;
+            actuatorEvent.ownerEmail = tx.deviceOwner.email;
             actuatorEvent.description = 'Actuator with id ' + id + ' changed its state: ' 
                 + '[state] '+  t_actuator.state + ', [enabled] ' + t_actuator.enabled.toString();
             emit(actuatorEvent);
