@@ -55,10 +55,11 @@ class Actuators extends React.Component {
 			console.log(data);
 			let actuatorRows = data.map((actuator,i) => {
 				var enabled = (actuator.enabled) ? "Yes" : "No";
+				var state = (actuator.state) ? actuator.state : "N/A";
 				return(
 					<tr key={actuator.deviceId}>
 						<td>{actuator.deviceId}</td>
-						<td style={{"textAlign": "center"}}>{actuator.state}</td>
+						<td style={{"textAlign": "center"}}>{state}</td>
 						<td style={{"textAlign": "center"}}>{enabled}</td>
 						<td style={{"textAlign": "center"}}>
 							<a className="btn btn-simple btn-info"
@@ -130,12 +131,6 @@ class Actuators extends React.Component {
 
 const mapStateToProps = (state) => ({
 	userEmail: state.userEmail
-})
-/*
-//Same as above, but without arguments: simple object
-const mapDispatchToProps = {
-	sideElementAction: selectSideElement
-}
-*/
+});
 
 export default connect(mapStateToProps)(Actuators);

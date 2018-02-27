@@ -5,6 +5,7 @@ import { REST_SERVER } from '../constants/constants'
 import Dashboard from './Dashboard'
 import Sensors from './Sensors'
 import Actuators from './Actuators'
+import AddDeviceForm from './Transactions'
 
 class MainContent extends React.Component {
 	constructor(props) {
@@ -16,20 +17,23 @@ class MainContent extends React.Component {
 
 	render() {
 		// Check which element is selected 
-		let currentContent = <h1>dafsdfa</h1>;
+		let content = <h1>TO DO</h1>;
 		this.props.sideElements.forEach(elem => {
 			let selectedElement = '';
 			if (elem.selected) {
 				selectedElement = elem.name.replace(' ','');
 				switch(selectedElement) {
 					case 'Dashboard':
-						currentContent = <Dashboard />
+						content = <Dashboard />
 						break;
 					case 'Sensors':
-						currentContent = <Sensors />
+						content = <Sensors />
 						break;
 					case 'Actuators':
-						currentContent = <Actuators />
+						content = <Actuators />
+						break;
+                    case 'AddDevice':
+                        content = <AddDeviceForm />
 						break;
 					default:
 						break;
@@ -40,7 +44,7 @@ class MainContent extends React.Component {
 		return (
 			<div className="content">
                 <div className="container-fluid">
-                        {currentContent}
+                        {content}
                 </div>
             </div>
 		);
