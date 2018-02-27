@@ -1,8 +1,7 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import {REST_SERVER, DEVICE_OWNER_NAMESPACE} from "../constants/constants"
-import {DEFAULT_USER} from "../constants/constants"
+import { DeleteDeviceModal } from './Transactions'
 
 // Graphs
 
@@ -11,12 +10,36 @@ const ReactHighstock = require('react-highcharts/ReactHighstock.src');
 class Sensors extends React.Component {
     constructor(props) {
 		super(props);
+
 		this.state = {
 			tableRows: [],
             selectedDevice: '',
+			modalWindow: {
+				type: '',
+				deviceId: '',
+				show: false
+			}
 		};
 		this.deviceClick = this.deviceClick.bind(this);
+		this.editClick = this.editClick.bind(this);
+		this.deleteClick = this.deleteClick.bind(this);
 	}
+
+	editClick(e, t_actuator) {
+		console.log('editClick');
+	}
+
+	deleteClick(e, t_id) {
+		console.log('deleteClick' + t_id);
+		this.setState({
+			modalWindow: {
+				type: 'delete',
+				deviceId: t_id,
+				show: true
+			}
+		})
+	}
+
 	deviceClick(e, t_deviceId) {
         e.preventDefault();
     	this.setState({
@@ -45,7 +68,10 @@ class Sensors extends React.Component {
                     	<td style={{"textAlign": "center"}}>{sensor.data.length}</td>
                     	<td style={{"textAlign": "center"}}>{eventThreshold}</td>
 						<td style={{"textAlign": "center"}}>
-							<a className="btn btn-simple btn-danger btn-icon remove"><i className="fa fa-times"></i></a>
+							<a className="btn btn-simple btn-danger btn-icon remove"
+								onClick={(e) => this.deleteClick(e, sensor.deviceId)}>
+								<i className="fa fa-times"></i>
+							</a>
 						</td>
 
                     </tr>
@@ -62,8 +88,29 @@ class Sensors extends React.Component {
         if (this.state.selectedDevice) {
             graph = <SensorGraph deviceId={this.state.selectedDevice} />;
         }
+        		let modal;
+		if (this.state.modalWindow.show) {
+			switch (this.state.modalWindow.type) {
+				case 'edit':
+					modal = <DeleteDeviceModal
+								userEmail={this.props.userEmail}
+								show={true}
+
+								deviceId={this.state.modalWindow.deviceId} />;
+					break;
+				case 'delete':
+					modal = <DeleteDeviceModal
+								userEmail={this.props.userEmail}
+								show={true}
+								deviceType='Sensor'
+								deviceId={this.state.modalWindow.deviceId} />;
+					break;
+				default: break;
+			}
+		}
 		return (
 			<div className="col-md-12">
+				{modal}
 				{graph}
 				<div className="row">
 					<div className="card">

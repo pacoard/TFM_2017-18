@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import {REST_SERVER, DEVICE_OWNER_NAMESPACE} from "../constants/constants";
-import { DeleteDeviceModal } from './Transactions'
+import { DeleteDeviceModal, EditActuatorModalForm } from './Transactions'
 
 class Actuators extends React.Component {
 	constructor(props) {
@@ -18,8 +18,16 @@ class Actuators extends React.Component {
 		this.deleteClick = this.deleteClick.bind(this);
 	}
 
-	editClick(e, t_actuator) {
-		console.log('editClick');
+	editClick(e, t_actuator, t_id) {
+		console.log('editClick' + t_id);
+		this.setState({
+			modalWindow: {
+				type: 'edit',
+				deviceId: t_id,
+				actuator: t_actuator,
+				show: true
+			}
+		})
 	}
 
 	deleteClick(e, t_id) {
@@ -54,7 +62,7 @@ class Actuators extends React.Component {
 						<td style={{"textAlign": "center"}}>{enabled}</td>
 						<td style={{"textAlign": "center"}}>
 							<a className="btn btn-simple btn-info"
-								onClick={(e) => this.editClick(e, actuator)}>
+								onClick={(e) => this.editClick(e, actuator, actuator.deviceId)}>
 								<i className="fa fa-edit"></i>
 							</a>
 							<a className="btn btn-simple btn-danger btn-icon remove"
@@ -73,15 +81,17 @@ class Actuators extends React.Component {
 		if (this.state.modalWindow.show) {
 			switch (this.state.modalWindow.type) {
 				case 'edit':
-					modal = <DeleteDeviceModal
+					modal = <EditActuatorModalForm
 								userEmail={this.props.userEmail}
 								show={true}
-								deviceId={this.state.modalWindow.deviceId} />;
+								deviceId={this.state.modalWindow.deviceId}
+								actuator={this.state.modalWindow.actuator}/>;
 					break;
 				case 'delete':
 					modal = <DeleteDeviceModal
 								userEmail={this.props.userEmail}
 								show={true}
+								deviceType='Actuator'
 								deviceId={this.state.modalWindow.deviceId} />;
 					break;
 				default: break;
