@@ -46,7 +46,8 @@ function CreateDevice(tx) {
         .then(function() {
             // Emit an event for the created asset
             var event = factory.newEvent('iot.biznet', 'LogEvent');
-            event.msg = 'Device of type ' + tx.deviceType + ' and id ' + tx.deviceId + ' created.';
+            event.ownerEmail = tx.deviceOwner.email;
+            event.msg = tx.deviceType + ' with ID ' + tx.deviceId + ' created.';
             emit(event);
         });
 }
@@ -72,7 +73,8 @@ function deleteDevice(tx, type) {
         .then(function() {
             // Emit an event for the deleted asset
             var event = factory.newEvent('iot.biznet', 'LogEvent');
-            event.msg = type + ' with id ' + id + ' deleted.';
+            event.ownerEmail = tx.deviceOwner.email;
+            event.msg = type + ' with ID ' + id + ' deleted.';
             emit(event);
         });
 }
@@ -134,7 +136,7 @@ function SensorReading(tx) {
                 var eventThreshold = factory.newEvent('iot.biznet', 'SensorEvent');
                 eventThreshold.sensorId = id;
                 eventThreshold.ownerEmail = tx.deviceOwner.email;
-                eventThreshold.description = 'Sensor with id ' + id 
+                eventThreshold.description = 'Sensor with ID ' + id 
                     + ' triggered an alarm: ' + tx.reading.value.toString() + ' ' + t_sensor.unit;
                 emit(eventThreshold);
             }
@@ -180,8 +182,8 @@ function ActuatorWrite(tx) {
             actuatorEvent.newState = t_actuator.state;
             actuatorEvent.enabled = t_actuator.enabled;
             actuatorEvent.ownerEmail = tx.deviceOwner.email;
-            actuatorEvent.description = 'Actuator with id ' + id + ' changed its state: ' 
-                + '[state] '+  t_actuator.state + ', [enabled] ' + t_actuator.enabled.toString();
+            actuatorEvent.description = 'Actuator with ID ' + id + ' changed its state: ' 
+                + '[NewState] '+  t_actuator.state + ', [Enabled] ' + t_actuator.enabled.toString();
             emit(actuatorEvent);
             // Emit an event for the transaction
             var event = factory.newEvent('iot.biznet', 'LogEvent');

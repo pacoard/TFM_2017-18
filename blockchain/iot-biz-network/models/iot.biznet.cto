@@ -86,6 +86,7 @@ event ActuatorEvent {
   o String description optional
 }
 event LogEvent {
+	o String ownerEmail
 	o String msg
 }
 
