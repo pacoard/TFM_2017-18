@@ -8,7 +8,9 @@ export const SIDE_ELEMENTS = [
 	{name: "Notifications", link: "#", icon: "pe-7s-bell", 		selected: false},
 ];
 
-export const REST_SERVER = "http://192.168.0.8:3000/api";
+export const REST_DNS = "192.168.0.8:3000"
+
+export const REST_SERVER_API = "http://"+REST_DNS+"/api";
 
 export const DEVICE_OWNER_NAMESPACE = "resource:iot.biznet.DeviceOwner#";
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {REST_SERVER, DEVICE_OWNER_NAMESPACE} from "../constants/constants";
+import {REST_SERVER_API, DEVICE_OWNER_NAMESPACE} from "../constants/constants";
 import { DeleteDeviceModal, EditActuatorModalForm } from './Transactions'
 
 class Actuators extends React.Component {
@@ -45,7 +45,7 @@ class Actuators extends React.Component {
 		// Fetch actuators from hyperledger REST API
 
 		// http://192.168.0.8:3000/api/queries/selectActuatorsByOwner?deviceOwner=resource:iot.biznet.DeviceOwner#pacoard@gmail.com
-		let url = REST_SERVER + '/queries/selectActuatorsByOwner?deviceOwner=' + encodeURIComponent(DEVICE_OWNER_NAMESPACE + this.props.userEmail);
+		let url = REST_SERVER_API + '/queries/selectActuatorsByOwner?deviceOwner=' + encodeURIComponent(DEVICE_OWNER_NAMESPACE + this.props.userEmail);
 		// http://192.168.0.8:3000/api/queries/selectActuatorsByOwner?deviceOwner=resource%3Aiot.biznet.DeviceOwner%23pacoard%40gmail.com
 		console.log('Fetching URL: '+url);
 		fetch(url)
@@ -55,12 +55,13 @@ class Actuators extends React.Component {
 			console.log(data);
 			let actuatorRows = data.map((actuator,i) => {
 				var enabled = (actuator.enabled) ? "Yes" : "No";
+				let color = (actuator.enabled) ? "text-success" : "text-danger";
 				var state = (actuator.state) ? actuator.state : "N/A";
 				return(
 					<tr key={actuator.deviceId}>
 						<td>{actuator.deviceId}</td>
 						<td style={{"textAlign": "center"}}>{state}</td>
-						<td style={{"textAlign": "center"}}>{enabled}</td>
+						<td style={{"textAlign": "center"}} className={color}>{enabled}</td>
 						<td style={{"textAlign": "center"}}>
 							<a className="btn btn-simple btn-info"
 								onClick={(e) => this.editClick(e, actuator, actuator.deviceId)}>

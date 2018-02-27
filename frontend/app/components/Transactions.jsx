@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {REST_SERVER, DEVICE_OWNER_NAMESPACE} from "../constants/constants"
+import {REST_SERVER_API, DEVICE_OWNER_NAMESPACE} from "../constants/constants"
 import Modal, {closeStyle} from 'simple-react-modal'
 
 class AddDeviceForm extends React.Component {
@@ -46,7 +46,7 @@ class AddDeviceForm extends React.Component {
     handleSubmit(event) {
         event.preventDefault();
         // Submit transaction
-        let url = REST_SERVER + '/CreateDevice';
+        let url = REST_SERVER_API + '/CreateDevice';
         console.log('Fetching URL: '+url);
 
         let txData = {
@@ -172,7 +172,7 @@ export class DeleteDeviceModal extends React.Component {
 
     delete() {
         // Submit transaction
-        let url = REST_SERVER + '/Delete' + this.props.deviceType;
+        let url = REST_SERVER_API + '/Delete' + this.props.deviceType;
         /*+ '?deviceOwner=' + encodeURIComponent(DEVICE_OWNER_NAMESPACE + this.props.userEmail)
         + '?device=' + encodeURIComponent(this.props.deviceId);*/
         console.log('Fetching URL: '+url);
@@ -250,7 +250,7 @@ export class EditActuatorModalForm extends React.Component {
 
     handleSubmit(event) {
         // Submit transaction
-        let url = REST_SERVER + '/ActuatorWrite';
+        let url = REST_SERVER_API + '/ActuatorWrite';
         console.log('Fetching URL: '+url);
 
         let txData = {

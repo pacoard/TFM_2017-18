@@ -1,9 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+
 //import { selectSideElement } from '../reducers/actions'
 //import { SIDE_ELEMENTS } from '../constants/constants'
 
+import Notification from './Notification'
 import SideBar from './SideBar'
 import MainContent from './MainContent'
 
@@ -26,6 +28,7 @@ class App extends React.Component {
 
 		return ( 
 			<div className="wrapper">
+                <Notification />
 			    <SideBar store={this.props.store}/>
 			    <div className="main-panel">
 			    	<NavBar currentElement={this.currentElement}/>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {REST_SERVER, DEVICE_OWNER_NAMESPACE} from "../constants/constants"
+import {REST_SERVER_API, DEVICE_OWNER_NAMESPACE} from "../constants/constants"
 import { DeleteDeviceModal } from './Transactions'
 
 // Graphs
@@ -51,7 +51,7 @@ class Sensors extends React.Component {
 		// Fetch sensors from hyperledger REST API
 
 		// http://192.168.0.8:3000/api/queries/selectSensorsByOwner?deviceOwner=resource:iot.biznet.DeviceOwner#pacoard@gmail.com
-		let url = REST_SERVER + '/queries/selectSensorsByOwner?deviceOwner=' + encodeURIComponent(DEVICE_OWNER_NAMESPACE + this.props.userEmail);
+		let url = REST_SERVER_API + '/queries/selectSensorsByOwner?deviceOwner=' + encodeURIComponent(DEVICE_OWNER_NAMESPACE + this.props.userEmail);
 		// http://192.168.0.8:3000/api/queries/selectSensorsByOwner?deviceOwner=resource%3Aiot.biznet.DeviceOwner%23pacoard%40gmail.com
 		console.log('Fetching URL: '+url);
 		fetch(url)
@@ -162,7 +162,7 @@ class SensorGraph extends React.Component {
 	    // Fetch sensors from hyperledger REST API
 
 		// http://192.168.0.8:3000/api/queries/selectSensorsByOwner?deviceOwner=resource:iot.biznet.DeviceOwner#pacoard@gmail.com
-		let url = REST_SERVER + '/queries/selectSensorById?deviceId=' + encodeURIComponent(t_deviceId);
+		let url = REST_SERVER_API + '/queries/selectSensorById?deviceId=' + encodeURIComponent(t_deviceId);
 		// http://192.168.0.8:3000/api/queries/selectSensorsByOwner?deviceOwner=resource%3Aiot.biznet.DeviceOwner%23pacoard%40gmail.com
 		console.log('Sensor Graph Fetching URL: '+url);
 		fetch(url)
