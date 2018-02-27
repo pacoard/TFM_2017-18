@@ -61,11 +61,13 @@ class Sensors extends React.Component {
 			let sensorRows = data.map((sensor,i) => {
 				var eventThreshold = "N/A";
 				if (sensor.eventThreshold) eventThreshold = sensor.eventThreshold + " " + sensor.unit;
+				var nReadings = 0;
+				if (sensor.data) nReadings = sensor.data.length;
 				return(
 					<tr key={sensor.deviceId}>
 						<td><a href="#" onClick={(e) => this.deviceClick(e, sensor.deviceId)}>{sensor.deviceId}</a></td>
                     	<td style={{"textAlign": "center"}}>{sensor.unit}</td>
-                    	<td style={{"textAlign": "center"}}>{sensor.data.length}</td>
+                    	<td style={{"textAlign": "center"}}>{nReadings}</td>
                     	<td style={{"textAlign": "center"}}>{eventThreshold}</td>
 						<td style={{"textAlign": "center"}}>
 							<a className="btn btn-simple btn-danger btn-icon remove"
