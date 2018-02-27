@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { SIDE_ELEMENTS } from '../constants/constants';
+import { SIDE_ELEMENTS, DEFAULT_USER } from '../constants/constants';
 
 function sideElementsReducer(state = SIDE_ELEMENTS, action) {
 	switch(action.type) {
@@ -20,7 +20,7 @@ function sideElementsReducer(state = SIDE_ELEMENTS, action) {
 	}
 }
 
-function userReducer(state = "", action) {
+function userReducer(state = DEFAULT_USER, action) {
 	switch(action.type) {
 		case 'SWITCH_USER':
 			console.log('(action) SWITCH_USER')

@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { selectSideElement } from '../reducers/actions'
-import { APP_NAME } from '../constants/constants'
 
 class SideBar extends React.Component {
 	constructor(props) {

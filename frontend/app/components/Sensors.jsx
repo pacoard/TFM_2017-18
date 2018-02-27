@@ -28,7 +28,7 @@ class Sensors extends React.Component {
 		// Fetch sensors from hyperledger REST API
 
 		// http://192.168.0.8:3000/api/queries/selectSensorsByOwner?deviceOwner=resource:iot.biznet.DeviceOwner#pacoard@gmail.com
-		let url = REST_SERVER + '/queries/selectSensorsByOwner?deviceOwner=' + encodeURIComponent(DEVICE_OWNER_NAMESPACE +  DEFAULT_USER);
+		let url = REST_SERVER + '/queries/selectSensorsByOwner?deviceOwner=' + encodeURIComponent(DEVICE_OWNER_NAMESPACE + this.props.userEmail);
 		// http://192.168.0.8:3000/api/queries/selectSensorsByOwner?deviceOwner=resource%3Aiot.biznet.DeviceOwner%23pacoard%40gmail.com
 		console.log('Fetching URL: '+url);
 		fetch(url)
@@ -76,10 +76,10 @@ class Sensors extends React.Component {
 								<thead>
 									<tr>
 										<th>Device ID</th>
-										<th>Unit</th>
-										<th>Readings</th>
-										<th>Alarm Threshold</th>
-										<th>Delete</th>
+										<th style={{"textAlign": "center"}}>Unit</th>
+										<th style={{"textAlign": "center"}}>Readings</th>
+										<th style={{"textAlign": "center"}}>Alarm Threshold</th>
+										<th style={{"textAlign": "center"}}>Delete</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -105,7 +105,8 @@ class SensorGraph extends React.Component {
 
 	// Scroll up when renderization
 	componentDidUpdate() {
-		ReactDOM.findDOMNode(this).scrollIntoView();
+		//ReactDOM.findDOMNode(this).scrollIntoView();
+		window.scrollTo(0, 0);
 	}
 
 	fetchData(t_deviceId) {

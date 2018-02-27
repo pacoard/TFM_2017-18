@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {REST_SERVER} from "../constants/constants";
+import {REST_SERVER, SIDE_ELEMENTS} from "../constants/constants";
 import {selectSideElement} from "../reducers/actions";
 
 class Dashboard extends React.Component {
@@ -32,6 +32,7 @@ class Dashboard extends React.Component {
 		}*/
 	}
 	render() {
+        // Icons colors: https://www.w3schools.com/bootstrap/bootstrap_typography.asp, Contextual Colors and Backgrounds
 		return (
 		    <div className="row">
                 <div className="col-md-12">
@@ -42,13 +43,13 @@ class Dashboard extends React.Component {
                                     <div className="row">
                                         <div className="col-xs-5">
                                             <div className="icon-big icon-warning text-center">
-                                                <i className="ti-server"></i>
+                                                <i className={SIDE_ELEMENTS[1].icon}></i>
                                             </div>
                                         </div>
                                         <div className="col-xs-7">
                                             <div className="numbers">
-                                                <p>Capacity</p>
-                                                105GB
+                                                <p>Sensors</p>
+                                                Number of sensors
                                             </div>
                                         </div>
                                     </div>
@@ -67,13 +68,13 @@ class Dashboard extends React.Component {
                                     <div className="row">
                                         <div className="col-xs-5">
                                             <div className="icon-big icon-success text-center">
-                                                <i className="ti-wallet"></i>
+                                                <i className={SIDE_ELEMENTS[2].icon}></i>
                                             </div>
                                         </div>
                                         <div className="col-xs-7">
                                             <div className="numbers">
-                                                <p>Revenue</p>
-                                                $1,345
+                                                <p>Actuators</p>
+                                                Number of actuators
                                             </div>
                                         </div>
                                     </div>
@@ -97,8 +98,8 @@ class Dashboard extends React.Component {
                                         </div>
                                         <div className="col-xs-7">
                                             <div className="numbers">
-                                                <p>Errors</p>
-                                                23
+                                                <p>Readings</p>
+                                                Number of readings
                                             </div>
                                         </div>
                                     </div>
@@ -117,13 +118,13 @@ class Dashboard extends React.Component {
                                     <div className="row">
                                         <div className="col-xs-5">
                                             <div className="icon-big icon-info text-center">
-                                                <i className="fa fa-twitter text-info"></i>
+                                                <i className="ti-bell text-info"></i>
                                             </div>
                                         </div>
                                         <div className="col-xs-7">
                                             <div className="numbers">
-                                                <p>Followers</p>
-                                                +45
+                                                <p>Last event</p>
+                                                Last event description
                                             </div>
                                         </div>
                                     </div>

@@ -1,22 +1,43 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import {REST_SERVER, DEVICE_OWNER_NAMESPACE} from "../constants/constants";
-
-import {DEFAULT_USER} from "../constants/constants";
+import { DeleteDeviceModal } from './Transactions'
 
 class Actuators extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			tableRows: [],
+			modalWindow: {
+				type: '',
+				deviceId: '',
+				show: false
+			}
 		};
+		this.editClick = this.editClick.bind(this);
+		this.deleteClick = this.deleteClick.bind(this);
+	}
+
+	editClick(e, t_actuator) {
+		console.log('editClick');
+	}
+
+	deleteClick(e, t_id) {
+		console.log('deleteClick' + t_id);
+		this.setState({
+			modalWindow: {
+				type: 'delete',
+				deviceId: t_id,
+				show: true
+			}
+		})
 	}
 
 	componentDidMount() {
 		// Fetch actuators from hyperledger REST API
 
 		// http://192.168.0.8:3000/api/queries/selectActuatorsByOwner?deviceOwner=resource:iot.biznet.DeviceOwner#pacoard@gmail.com
-		let url = REST_SERVER + '/queries/selectActuatorsByOwner?deviceOwner=' + encodeURIComponent(DEVICE_OWNER_NAMESPACE +  DEFAULT_USER);
+		let url = REST_SERVER + '/queries/selectActuatorsByOwner?deviceOwner=' + encodeURIComponent(DEVICE_OWNER_NAMESPACE + this.props.userEmail);
 		// http://192.168.0.8:3000/api/queries/selectActuatorsByOwner?deviceOwner=resource%3Aiot.biznet.DeviceOwner%23pacoard%40gmail.com
 		console.log('Fetching URL: '+url);
 		fetch(url)
@@ -32,9 +53,15 @@ class Actuators extends React.Component {
 						<td style={{"textAlign": "center"}}>{actuator.state}</td>
 						<td style={{"textAlign": "center"}}>{enabled}</td>
 						<td style={{"textAlign": "center"}}>
-							<a className="btn btn-simple btn-danger btn-icon remove"><i className="fa fa-times"></i></a>
+							<a className="btn btn-simple btn-info"
+								onClick={(e) => this.editClick(e, actuator)}>
+								<i className="fa fa-edit"></i>
+							</a>
+							<a className="btn btn-simple btn-danger btn-icon remove"
+								onClick={(e) => this.deleteClick(e, actuator.deviceId)}>
+								<i className="fa fa-times"></i>
+							</a>
 						</td>
-
 					</tr>
 				)
 			}); // <td style={{"textAlign": "center"}}><i className="ti-close"></i></td>
@@ -42,8 +69,27 @@ class Actuators extends React.Component {
 		})
 	}
 	render() {
+		let modal;
+		if (this.state.modalWindow.show) {
+			switch (this.state.modalWindow.type) {
+				case 'edit':
+					modal = <DeleteDeviceModal
+								userEmail={this.props.userEmail}
+								show={true}
+								deviceId={this.state.modalWindow.deviceId} />;
+					break;
+				case 'delete':
+					modal = <DeleteDeviceModal
+								userEmail={this.props.userEmail}
+								show={true}
+								deviceId={this.state.modalWindow.deviceId} />;
+					break;
+				default: break;
+			}
+		}
 		return (
 			<div className="col-md-12">
+				{modal}
 				<div className="row">
 					<div className="card">
 						<div className="header">
@@ -55,9 +101,9 @@ class Actuators extends React.Component {
 								<thead>
 									<tr>
 										<th>Device ID</th>
-										<th>State</th>
-										<th>Enabled</th>
-										<th>Delete</th>
+										<th style={{"textAlign": "center"}}>State</th>
+										<th style={{"textAlign": "center"}}>Enabled</th>
+										<th style={{"textAlign": "center"}}>Actions</th>
 									</tr>
 								</thead>
 								<tbody>
