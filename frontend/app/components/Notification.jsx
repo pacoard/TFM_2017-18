@@ -4,9 +4,7 @@ import Websocket from 'react-websocket';
 import {REST_DNS, DEVICE_OWNER_NAMESPACE} from "../constants/constants";
 
 
-function showNotification(message){
-	var color = Math.floor((Math.random() * 4) + 1);
-
+export function showNotification(message){
 	$.notify({
 		icon: "pe-7s-bell",
 		message: message

@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import {REST_SERVER_API, DEVICE_OWNER_NAMESPACE} from "../constants/constants"
 import { DeleteDeviceModal } from './Transactions'
+import { showNotification} from "./Notification";
 
 // Graphs
 
@@ -10,7 +11,6 @@ const ReactHighstock = require('react-highcharts/ReactHighstock.src');
 class Sensors extends React.Component {
     constructor(props) {
 		super(props);
-
 		this.state = {
 			tableRows: [],
             selectedDevice: '',
@@ -47,9 +47,8 @@ class Sensors extends React.Component {
         })
 	}
 
-	componentDidMount() {
-		// Fetch sensors from hyperledger REST API
-
+	updateContent() {
+    			// Fetch sensors from hyperledger REST API
 		// http://192.168.0.8:3000/api/queries/selectSensorsByOwner?deviceOwner=resource:iot.biznet.DeviceOwner#pacoard@gmail.com
 		let url = REST_SERVER_API + '/queries/selectSensorsByOwner?deviceOwner=' + encodeURIComponent(DEVICE_OWNER_NAMESPACE + this.props.userEmail);
 		// http://192.168.0.8:3000/api/queries/selectSensorsByOwner?deviceOwner=resource%3Aiot.biznet.DeviceOwner%23pacoard%40gmail.com
@@ -85,6 +84,12 @@ class Sensors extends React.Component {
 			});
 		});
 	}
+
+	componentDidMount() {
+    	this.updateContent();
+	}
+
+
 	render() {
         let graph = <a></a>;
         if (this.state.selectedDevice) {
@@ -147,6 +152,7 @@ class SensorGraph extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			title: "",
 			unit: "",
 			dataPoints: [],
 		};
@@ -170,18 +176,23 @@ class SensorGraph extends React.Component {
 			return result.json();
 		}).then(data => {
 			// The result will always be an array with one entry
-			var sensor = data[0];
+			let title = 'Device \"'+t_deviceId+'\" readings';
+			let sensor = data[0];
 			let dataPoints = [];
-			sensor.data.forEach((p) => {
-				var d = new Date(p.timestamp);
-				dataPoints.push([d.getTime(), p.value]);
-				/*dataPoints.dates.push(new Date(p.timestamp));
-				dataPoints.values.push(p.value);*/
-			})
+			try {
+				sensor.data.forEach((p) => {
+					var d = new Date(p.timestamp);
+					dataPoints.push([d.getTime(), p.value]);
+				});
+			} catch(e) {
+				showNotification("The device '"+t_deviceId+"' has no readings.");
+			}
 			this.setState({
+				title: title,
 				unit: sensor.unit,
 				dataPoints: dataPoints
 			});
+
 		});
     }
 
@@ -206,10 +217,6 @@ class SensorGraph extends React.Component {
             rangeSelector: {
                 selected: 1
             },
-
-            title: {
-                text: '"'+this.props.deviceId+'" readings'
-            },
             series: [
                 {
                     name: this.props.deviceId,
@@ -226,8 +233,8 @@ class SensorGraph extends React.Component {
 			<div className="row">
 				<div className="card">
 					<div className="header">
-						<h4 className="title">Device "{this.props.deviceId}" readings</h4>
-						<p className="category">All data stored in the distributed ledger</p>
+						<h4 className="title">{this.state.title}</h4>
+						<p className="category">All data is stored in the distributed ledger</p>
 					</div>
 					<div className="content">
 						<ReactHighstock config={config}  ref="chart" isPureConfig />
