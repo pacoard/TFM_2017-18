@@ -167,7 +167,8 @@ export class DeleteDeviceModal extends React.Component {
     }
 
     close(){
-        this.setState({show: false});
+        //this.setState({show: false});
+        this.props.callback();
     }
 
     delete() {

@@ -23,6 +23,7 @@ class Sensors extends React.Component {
 		this.deviceClick = this.deviceClick.bind(this);
 		this.editClick = this.editClick.bind(this);
 		this.deleteClick = this.deleteClick.bind(this);
+		this.modalCallback = this.modalCallback.bind(this);
 	}
 
 	editClick(e, t_actuator) {
@@ -36,6 +37,16 @@ class Sensors extends React.Component {
 				type: 'delete',
 				deviceId: t_id,
 				show: true
+			}
+		})
+	}
+
+	modalCallback() {
+    	this.setState({
+			modalWindow: {
+				type: '',
+				deviceId: '',
+				show: false
 			}
 		})
 	}
@@ -102,15 +113,16 @@ class Sensors extends React.Component {
 					modal = <DeleteDeviceModal
 								userEmail={this.props.userEmail}
 								show={true}
-
-								deviceId={this.state.modalWindow.deviceId} />;
+								deviceId={this.state.modalWindow.deviceId}
+								callback={this.modalCallback}/>;
 					break;
 				case 'delete':
 					modal = <DeleteDeviceModal
 								userEmail={this.props.userEmail}
 								show={true}
 								deviceType='Sensor'
-								deviceId={this.state.modalWindow.deviceId} />;
+								deviceId={this.state.modalWindow.deviceId}
+								callback={this.modalCallback}/>;
 					break;
 				default: break;
 			}
