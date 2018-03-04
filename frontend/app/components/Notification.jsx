@@ -11,7 +11,7 @@ export function showNotification(message){
 
 	},{
 		type: 'info',
-		timer: 4000,
+		timer: 3000,
 		placement: {
 			from: 'bottom',
 			align: 'right'
@@ -47,11 +47,6 @@ class Notification extends React.Component {
 const mapStateToProps = (state) => ({
 	userEmail: state.userEmail
 })
-/*
-//Same as above, but without arguments: simple object
-const mapDispatchToProps = {
-	sideElementAction: selectSideElement
-}
-*/
+
 
 export default connect(mapStateToProps)(Notification);

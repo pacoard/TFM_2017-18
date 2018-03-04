@@ -5,7 +5,6 @@ export const SIDE_ELEMENTS = [
 	{name: "Actuators", 	link: "#", icon: "pe-7s-light", 	selected: false},
 	{name: "Add Device", 	link: "#", icon: "pe-7s-plus", 	 	selected: false},
 	{name: "Delete Device", link: "#", icon: "pe-7s-trash", 	selected: false},
-	{name: "Notifications", link: "#", icon: "pe-7s-bell", 		selected: false},
 ];
 
 export const REST_DNS = "192.168.0.8:3000"

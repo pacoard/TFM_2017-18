@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 
 //import { selectSideElement } from '../reducers/actions'
-//import { SIDE_ELEMENTS } from '../constants/constants'
+import { SIDE_ELEMENTS } from '../constants/constants'
 
 import Notification from './Notification'
 import SideBar from './SideBar'
@@ -12,11 +12,11 @@ import MainContent from './MainContent'
 class App extends React.Component {
 	constructor(props) {
 		super(props);
-		this.currentElement = "Welcome";
+		this.currentElement = SIDE_ELEMENTS[0];
 		this.props.store.subscribe(()=> {
 			this.props.sideElements.forEach((e) => {
 				if (e.selected) {
-					this.currentElement = e.name;
+					this.currentElement = e;
 				}
         	});
 			//Update component
@@ -31,7 +31,7 @@ class App extends React.Component {
                 <Notification />
 			    <SideBar store={this.props.store}/>
 			    <div className="main-panel">
-			    	<NavBar currentElement={this.currentElement}/>
+			    	<NavBar currentElement={this.currentElement} userEmail={this.props.userEmail}/>
 			        <MainContent store={this.props.store}/>
 			        <Footer/>
 			    </div>
@@ -57,52 +57,16 @@ class NavBar extends React.Component {
                         <span className="icon-bar"></span>
                         <span className="icon-bar"></span>
                     </button>
-                    <a className="navbar-brand" href="#">{this.props.currentElement}</a>
+                    <a className="navbar-brand" href="#"> <i className={this.props.currentElement.icon}></i>   {this.props.currentElement.name}</a>
                 </div>
                 <div className="collapse navbar-collapse">
-                    <ul className="nav navbar-nav navbar-left">
-                        <li>
-                            <a href="#" className="dropdown-toggle" data-toggle="dropdown">
-                                <i className="fa fa-dashboard"></i>
-								<p className="hidden-lg hidden-md">Dashboard</p>
-                            </a>
-                        </li>
-                        <li className="dropdown">
-                              <a href="#" className="dropdown-toggle" data-toggle="dropdown">
-                                    <i className="fa fa-globe"></i>
-                                    <b className="caret hidden-lg hidden-md"></b>
-									<p className="hidden-lg hidden-md">
-										5 Notifications
-										<b className="caret"></b>
-									</p>
-                              </a>
-                              <ul className="dropdown-menu">
-                                <li><a href="#">Notification 1</a></li>
-                                <li><a href="#">Notification 2</a></li>
-                                <li><a href="#">Notification 3</a></li>
-                                <li><a href="#">Notification 4</a></li>
-                                <li><a href="#">Another notification</a></li>
-                              </ul>
-                        </li>
-                        <li>
-                           <a href="">
-                                <i className="fa fa-search"></i>
-								<p className="hidden-lg hidden-md">Search</p>
-                            </a>
-                        </li>
-                    </ul>
 
                     <ul className="nav navbar-nav navbar-right">
-                        <li>
-                           <a href="">
-                               <p>Account</p>
-                            </a>
-                        </li>
                         <li className="dropdown">
                               <a href="#" className="dropdown-toggle" data-toggle="dropdown">
                                     <p>
-										Dropdown
-										<b className="caret"></b>
+                                        {this.props.userEmail}
+										 <b className="caret"></b>
 									</p>
 
                               </a>
@@ -117,8 +81,8 @@ class NavBar extends React.Component {
                               </ul>
                         </li>
                         <li>
-                            <a href="#">
-                                <p>Log out</p>
+                            <a href="https://github.com/pacoard/TFM_2017-18">
+                                <p><i className="fa fa-github"></i> Github</p>
                             </a>
                         </li>
 						<li className="separator hidden-lg"></li>
@@ -159,6 +123,7 @@ class Footer extends React.Component {
 function mapStateToProps(state) {
 	return {
 		sideElements: state.sideElements,
+        userEmail: state.userEmail
 	};
 }
 
