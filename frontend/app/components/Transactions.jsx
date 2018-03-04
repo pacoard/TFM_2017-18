@@ -167,15 +167,15 @@ export class DeleteDeviceModal extends React.Component {
     }
 
     close(){
-        //this.setState({show: false});
         this.props.callback();
     }
 
     delete() {
         // Submit transaction
-        let url = REST_SERVER_API + '/Delete' + this.props.deviceType;
-        /*+ '?deviceOwner=' + encodeURIComponent(DEVICE_OWNER_NAMESPACE + this.props.userEmail)
-        + '?device=' + encodeURIComponent(this.props.deviceId);*/
+        let t = this.props.deviceType;
+        let type = (t.endsWith('s')) ? t.slice(0, -1) : t;
+        let url = REST_SERVER_API + '/Delete' + type;
+
         console.log('Fetching URL: '+url);
 
         let txData = {

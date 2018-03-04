@@ -16,6 +16,7 @@ class Actuators extends React.Component {
 		};
 		this.editClick = this.editClick.bind(this);
 		this.deleteClick = this.deleteClick.bind(this);
+		this.modalCallback = this.modalCallback.bind(this);
 	}
 
 	editClick(e, t_actuator, t_id) {
@@ -39,6 +40,16 @@ class Actuators extends React.Component {
 				show: true
 			}
 		})
+	}
+
+	modalCallback() {
+    	this.setState({
+			modalWindow: {
+				type: '',
+				deviceId: '',
+				show: false
+			}
+		});
 	}
 
 	componentDidMount() {
@@ -87,14 +98,16 @@ class Actuators extends React.Component {
 								userEmail={this.props.userEmail}
 								show={true}
 								deviceId={this.state.modalWindow.deviceId}
-								actuator={this.state.modalWindow.actuator}/>;
+								actuator={this.state.modalWindow.actuator}
+								callback={this.modalCallback}/>;
 					break;
 				case 'delete':
 					modal = <DeleteDeviceModal
 								userEmail={this.props.userEmail}
 								show={true}
 								deviceType='Actuator'
-								deviceId={this.state.modalWindow.deviceId} />;
+								deviceId={this.state.modalWindow.deviceId}
+								callback={this.modalCallback}/>;
 					break;
 				default: break;
 			}

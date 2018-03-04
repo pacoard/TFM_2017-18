@@ -6,6 +6,7 @@ import Dashboard from './Dashboard'
 import Sensors from './Sensors'
 import Actuators from './Actuators'
 import AddDeviceForm from './Transactions'
+import DeleteDevice from './DeleteDevice'
 
 class MainContent extends React.Component {
 	constructor(props) {
@@ -35,6 +36,9 @@ class MainContent extends React.Component {
 						break;
                     case 'AddDevice':
                         content = <AddDeviceForm />
+						break;
+					case 'DeleteDevice':
+                        content = <DeleteDevice />
 						break;
 					default:
 						break;
