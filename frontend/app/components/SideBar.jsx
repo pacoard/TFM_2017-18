@@ -19,9 +19,8 @@ class SideBar extends React.Component {
 		            <div className="logo">
 		                <a href="#" className="simple-text">
 							<img src="assets/img/reactlogo.png" alt="React Logo" width="42" height="30"/>
-							SMART
+							d-IoT
 							<img src="assets/img/hyperledger-logo.png" alt="Hyperledger Logo" width="42" height="42"/>
-							HOME
 		                </a>
 		            </div>
 		            <ul className="nav">

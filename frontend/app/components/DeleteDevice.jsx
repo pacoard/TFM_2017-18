@@ -79,9 +79,9 @@ class DeviceTable extends React.Component {
 
     updateContent() {
         // Fetch devices from hyperledger REST API
-		// http://192.168.0.8:3000/api/queries/selectSensorsByOwner?deviceOwner=resource:iot.biznet.DeviceOwner#pacoard@gmail.com
+		// http://192.168.0.8:3000/api/queries/selectSensorsByOwner?deviceOwner=resource:diot.biznet.DeviceOwner#pacoard@gmail.com
 		let url = REST_SERVER_API + '/queries/select'+this.props.type+'ByOwner?deviceOwner=' + encodeURIComponent(DEVICE_OWNER_NAMESPACE + this.props.userEmail);
-		// http://192.168.0.8:3000/api/queries/selectSensorsByOwner?deviceOwner=resource%3Aiot.biznet.DeviceOwner%23pacoard%40gmail.com
+		// http://192.168.0.8:3000/api/queries/selectSensorsByOwner?deviceOwner=resource%3Adiot.biznet.DeviceOwner%23pacoard%40gmail.com
 		console.log('Fetching URL: '+url);
 		fetch(url)
 		.then(result => {

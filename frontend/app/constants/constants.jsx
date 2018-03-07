@@ -11,6 +11,6 @@ export const REST_DNS = "192.168.0.8:3000"
 
 export const REST_SERVER_API = "http://"+REST_DNS+"/api";
 
-export const DEVICE_OWNER_NAMESPACE = "resource:iot.biznet.DeviceOwner#";
+export const DEVICE_OWNER_NAMESPACE = "resource:diot.biznet.DeviceOwner#";
 
 export const DEFAULT_USER = "pacoard@gmail.com";

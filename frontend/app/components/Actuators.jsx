@@ -55,9 +55,9 @@ class Actuators extends React.Component {
 	componentDidMount() {
 		// Fetch actuators from hyperledger REST API
 
-		// http://192.168.0.8:3000/api/queries/selectActuatorsByOwner?deviceOwner=resource:iot.biznet.DeviceOwner#pacoard@gmail.com
+		// http://192.168.0.8:3000/api/queries/selectActuatorsByOwner?deviceOwner=resource:diot.biznet.DeviceOwner#pacoard@gmail.com
 		let url = REST_SERVER_API + '/queries/selectActuatorsByOwner?deviceOwner=' + encodeURIComponent(DEVICE_OWNER_NAMESPACE + this.props.userEmail);
-		// http://192.168.0.8:3000/api/queries/selectActuatorsByOwner?deviceOwner=resource%3Aiot.biznet.DeviceOwner%23pacoard%40gmail.com
+		// http://192.168.0.8:3000/api/queries/selectActuatorsByOwner?deviceOwner=resource%3Adiot.biznet.DeviceOwner%23pacoard%40gmail.com
 		console.log('Fetching URL: '+url);
 		fetch(url)
 		.then(result => {
