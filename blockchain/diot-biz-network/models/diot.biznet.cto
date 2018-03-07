@@ -1,0 +1,104 @@
+/**
+ * IoT business network model definitions
+ *
+ * https://ibm-blockchain.github.io/develop/reference/cto_language.html
+ */
+
+namespace diot.biznet
+
+/**
+ * PARTICIPANTS
+ *
+ */
+participant DeviceOwner identified by email {
+  o String email
+  o String name optional
+  o String phone optional
+}
+
+/**
+ * ASSETS
+ *
+ */
+abstract asset Device identified by deviceId {
+  o String deviceId
+  --> DeviceOwner deviceOwner
+}
+asset Sensor extends Device {
+  o Reading[] data optional
+  o String unit
+  o Integer eventThreshold optional
+}
+asset Actuator extends Device {
+  o String state optional
+  o Boolean enabled default=false optional
+}
+
+/**
+ * TRANSACTIONS
+ *
+ */
+transaction CreateDevice {
+  o String deviceId
+  o DeviceType deviceType
+  o String unit optional
+  o Integer eventThreshold optional
+  o String state optional
+  o Boolean enabled optional
+  --> DeviceOwner deviceOwner
+}
+transaction DeleteSensor {
+  --> Sensor device
+  --> DeviceOwner deviceOwner
+}
+transaction DeleteActuator {
+  --> Actuator device
+  --> DeviceOwner deviceOwner
+}
+transaction SensorReading {
+  o Reading reading
+  --> Sensor sensor
+  --> DeviceOwner deviceOwner
+}
+transaction ActuatorWrite {
+  o String newState optional
+  o Boolean enabled optional
+  --> Actuator actuator
+  --> DeviceOwner deviceOwner
+}
+
+/**
+ * EVENTS
+ *
+ */
+event SensorEvent {
+  o String sensorId
+  o String ownerEmail
+  o String msg
+}
+
+event ActuatorEvent {
+  o String actuatorId
+  o String eventCode optional
+  o String newState optional
+  o Boolean enabled
+  o String ownerEmail
+  o String msg optional
+}
+event LogEvent {
+	o String ownerEmail
+	o String msg
+}
+
+/**
+ * OTHER DEFINITIONS
+ *
+ */
+concept Reading {
+    o DateTime timestamp
+    o Integer value
+}
+enum DeviceType {
+  o SENSOR
+  o ACTUATOR
+}

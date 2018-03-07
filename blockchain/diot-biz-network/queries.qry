@@ -1,0 +1,30 @@
+/** Queries for the diot business network
+*/
+
+query selectSensorsByOwner {
+	description: "Select sensors by owner"
+	statement:
+		SELECT diot.biznet.Sensor
+			WHERE (deviceOwner == _$deviceOwner)
+}
+
+query selectActuatorsByOwner {
+	description: "Select actuators by owner"
+	statement:
+		SELECT diot.biznet.Actuator
+			WHERE (deviceOwner == _$deviceOwner)
+}
+
+query selectSensorById {
+	description: "Select sensor by id"
+	statement:
+		SELECT diot.biznet.Sensor
+			WHERE (deviceId == _$deviceId)
+}
+
+query selectActuatorById {
+	description: "Select actuators by id"
+	statement:
+		SELECT diot.biznet.Actuator
+			WHERE (deviceId == _$deviceId)
+}
