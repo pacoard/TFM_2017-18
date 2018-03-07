@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import Websocket from 'react-websocket';
 import {REST_DNS, DEVICE_OWNER_NAMESPACE} from "../constants/constants";
+import {notification} from "../reducers/actions";
 
 
 export function showNotification(message){
@@ -31,6 +32,7 @@ class Notification extends React.Component {
             console.log('WebSocket: ');
             console.log(result);
         }
+        this.props.notificationAction(result.msg);
 
     }
 
@@ -48,5 +50,9 @@ const mapStateToProps = (state) => ({
 	userEmail: state.userEmail
 })
 
+const mapDispatchToProps = {
+	notificationAction: notification
+}
 
-export default connect(mapStateToProps)(Notification);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Notification);

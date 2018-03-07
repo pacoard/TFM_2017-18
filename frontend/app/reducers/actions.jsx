@@ -11,3 +11,10 @@ export function switchUser(userEmail) {
 		userEmail: userEmail,
 	};
 }
+
+export function notification(notification) {
+	return {
+		type: 'NOTIFICATION',
+		notification: notification,
+	}
+}

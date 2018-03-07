@@ -96,6 +96,7 @@ class NavBar extends React.Component {
 
 class Footer extends React.Component {
 	render() {
+	    let date = new Date().getFullYear();
 		return (
 		<footer className="footer">
             <div className="container-fluid">
@@ -104,13 +105,13 @@ class Footer extends React.Component {
 
                         <li>
                             <a href="#">
-                                Home
+                                d-IoT - Decentralised Internet of Things
                             </a>
                         </li>
                     </ul>
                 </nav>
 				<div className="copyright pull-right">
-                    &copy; <script>document.write(new Date().getFullYear())</script>, made with <i className="fa fa-heart heart"></i> by <a href="http://www.creative-tim.com">Creative Tim</a>
+                    &copy; {date}, made with  by <a href="http://www.github.com/pacoard">Paco</a>
                 </div>
             </div>
         </footer>

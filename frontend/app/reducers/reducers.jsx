@@ -39,10 +39,30 @@ function userReducer(state = DEFAULT_USER, action) {
 	}
 }
 
+function notificationReducer(state = '', action) {
+		switch(action.type) {
+		case 'NOTIFICATION':
+			console.log('(action) NOTIFICATION')
+			let newstate = state;
+			/*newstate.forEach(function (element) {
+				if (element.name == action.sideElementName) {
+					element.selected = true;
+					console.log("Selected: "+element.name);
+				} else {
+					element.selected = false
+				}
+			})*/
+			return newstate;
+			break;
+		default: return state;
+	}
+}
+
 const GlobalState = combineReducers(
 	{
 		sideElements: sideElementsReducer,
-		userEmail:userReducer,
+		userEmail: userReducer,
+		notification: notificationReducer,
 	});
 
 export default GlobalState;

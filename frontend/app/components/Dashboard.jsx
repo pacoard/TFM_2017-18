@@ -1,38 +1,46 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {REST_SERVER, SIDE_ELEMENTS} from "../constants/constants";
+import {DEVICE_OWNER_NAMESPACE, REST_SERVER, REST_SERVER_API, SIDE_ELEMENTS} from "../constants/constants";
 import {selectSideElement} from "../reducers/actions";
 
 class Dashboard extends React.Component {
     constructor(props) {
-		super(props);
-		this.state = {
-			tableRows: [],
-		};
+        super(props);
+        this.state = {
+            sensors: [],
+            actuators: [],
+        }
+    }
+
+    componentDidMount() {
+        this.updateContent();
+    }
+
+    updateContent() {
+        // Fetch devices from hyperledger REST API
+		let sensorsURL = REST_SERVER_API + '/queries/selectSensorsByOwner?deviceOwner=' + encodeURIComponent(DEVICE_OWNER_NAMESPACE + this.props.userEmail);
+		let actuatorsURL = REST_SERVER_API + '/queries/selectActuatorsByOwner?deviceOwner=' + encodeURIComponent(DEVICE_OWNER_NAMESPACE + this.props.userEmail);
+		console.log('Fetching URL: '+sensorsURL);
+		console.log('Fetching URL: '+actuatorsURL);
+
+        Promise.all([sensorsURL, actuatorsURL].map(url =>
+            fetch(url).then(result => result.json())
+        )).then(data => {
+            this.setState({
+                sensors: data[0],
+                actuators: data[1]
+            })
+        });
 	}
 
-	componentDidMount() {
-		// Fetch polls from hyperledger REST API
-
-		/*fetch(REST_SERVER + '/net.biz.poll.Poll')
-		.then(result => {
-			return result.json();
-		}).then(data => {
-			let polls = data.map((poll,i) => {
-				return(
-					<tr key={i}>
-                    	<td>{poll.pollId}</td>
-                    	<td>{poll.pollOwner.split("#")[1]}</td>
-                    	<td>{poll.pollObject.title}</td>
-                    	<td>{poll.pollObject.questions.length}</td>
-                    </tr>
-				)
-			});
-			this.setState({tableRows: polls});
-		}*/
-	}
 	render() {
         // Icons colors: https://www.w3schools.com/bootstrap/bootstrap_typography.asp, Contextual Colors and Backgrounds
+        let nSensors = this.state.sensors.length;
+        let nReadings = 0;
+        this.state.sensors.forEach((sensor, i) => {
+            if (sensor.data) nReadings += sensor.data.length;
+        });
+        let nActuators = this.state.actuators.length;
 		return (
 		    <div className="row">
                 <div className="col-md-12">
@@ -43,7 +51,9 @@ class Dashboard extends React.Component {
                                     <div className="row">
                                         <div className="col-xs-5">
                                             <div className="icon-big icon-warning text-center">
-                                                <i className={SIDE_ELEMENTS[1].icon}></i>
+                                                <h3>
+                                                    <i className={SIDE_ELEMENTS[1].icon}></i>  {nSensors}
+                                                </h3>
                                             </div>
                                         </div>
                                         <div className="col-xs-7">
@@ -67,9 +77,9 @@ class Dashboard extends React.Component {
                                 <div className="content">
                                     <div className="row">
                                         <div className="col-xs-5">
-                                            <div className="icon-big icon-success text-center">
-                                                <i className={SIDE_ELEMENTS[2].icon}></i>
-                                            </div>
+                                                <h3>
+                                                    <i className={SIDE_ELEMENTS[2].icon}></i>  {nActuators}
+                                                </h3>
                                         </div>
                                         <div className="col-xs-7">
                                             <div className="numbers">
@@ -81,7 +91,7 @@ class Dashboard extends React.Component {
                                     <div className="footer">
 
                                         <div className="stats">
-                                            <i className="ti-calendar"></i> Last day
+                                            <i className="ti-reload"></i> Updated now
                                         </div>
                                     </div>
                                 </div>
@@ -93,7 +103,9 @@ class Dashboard extends React.Component {
                                     <div className="row">
                                         <div className="col-xs-5">
                                             <div className="icon-big icon-danger text-center">
-                                                <i className="ti-pulse"></i>
+                                                <h3>
+                                                    <i className="ti-pulse"></i>  {nReadings}
+                                                </h3>
                                             </div>
                                         </div>
                                         <div className="col-xs-7">
@@ -106,7 +118,7 @@ class Dashboard extends React.Component {
                                     <div className="footer">
 
                                         <div className="stats">
-                                            <i className="ti-timer"></i> In the last hour
+                                            <i className="ti-reload"></i> Updated now
                                         </div>
                                     </div>
                                 </div>
@@ -118,7 +130,7 @@ class Dashboard extends React.Component {
                                     <div className="row">
                                         <div className="col-xs-5">
                                             <div className="icon-big icon-info text-center">
-                                                <i className="ti-bell text-info"></i>
+                                                <h3><i className="ti-bell text-info"></i> {this.props.notification}</h3>
                                             </div>
                                         </div>
                                         <div className="col-xs-7">
@@ -138,78 +150,6 @@ class Dashboard extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div className="row">
-
-                        <div className="col-md-12">
-                            <div className="card">
-                                <div className="header">
-                                    <h4 className="title">Users Behavior</h4>
-                                    <p className="category">24 Hours performance</p>
-                                </div>
-                                <div className="content">
-                                    <div id="chartHours" className="ct-chart"></div>
-                                    <div className="footer">
-                                        <div className="chart-legend">
-                                            <i className="fa fa-circle text-info"></i> Open
-                                            <i className="fa fa-circle text-danger"></i> Click
-                                            <i className="fa fa-circle text-warning"></i> Click Second Time
-                                        </div>
-
-                                        <div className="stats">
-                                            <i className="ti-reload"></i> Updated 3 minutes ago
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-6">
-                            <div className="card">
-                                <div className="header">
-                                    <h4 className="title">Email Statistics</h4>
-                                    <p className="category">Last Campaign Performance</p>
-                                </div>
-                                <div className="content">
-                                    <div id="chartPreferences" className="ct-chart ct-perfect-fourth"></div>
-
-                                    <div className="footer">
-                                        <div className="chart-legend">
-                                            <i className="fa fa-circle text-info"></i> Open
-                                            <i className="fa fa-circle text-danger"></i> Bounce
-                                            <i className="fa fa-circle text-warning"></i> Unsubscribe
-                                        </div>
-
-                                        <div className="stats">
-                                            <i className="ti-timer"></i> Campaign sent 2 days ago
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-6">
-                            <div className="card ">
-                                <div className="header">
-                                    <h4 className="title">2015 Sales</h4>
-                                    <p className="category">All products including Taxes</p>
-                                </div>
-                                <div className="content">
-                                    <div id="chartActivity" className="ct-chart"></div>
-
-                                    <div className="footer">
-                                        <div className="chart-legend">
-                                            <i className="fa fa-circle text-info"></i> Tesla Model S
-                                            <i className="fa fa-circle text-warning"></i> BMW 5 Series
-                                        </div>
-
-                                        <div className="stats">
-                                            <i className="ti-check"></i> Data information certified
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 		);
@@ -217,7 +157,8 @@ class Dashboard extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-	userEmail: state.userEmail
+	userEmail: state.userEmail,
+    notification: state.notification
 })
 /*
 //Same as above, but without arguments: simple object
