@@ -8,13 +8,19 @@ By decentralizing the data storage and business logic, IoT's scalability problem
 
 ## dIoT: Decentralized Internet of Things
 
-The project consists of a frontend, a smart contract (blockchain-backend) and a wireless sensor network as an IoT use case scenario.
+The project consists of a frontend, a smart contract (blockchain-backend) and a wireless sensor network as an IoT use case scenario. The application lets a user create/delete/update devices with their IDs. Whenever a sensor registers a reading over the set threshold, the smart contract emits an event that can be seen in the website as a notification.
+
+### Add device
+![ ](/images/frontend-add-device.jpg)
 
 ### Sensors
 ![ ](/images/frontend-sensors.jpg)
 
 ### Actuators
 ![ ](/images/frontend-actuators.jpg)
+
+### Edit actuator state
+![ ](/images/frontend-actuator-edit.jpg)
 
 ### Assets
 ```

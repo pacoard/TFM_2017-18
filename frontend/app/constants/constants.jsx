@@ -7,7 +7,7 @@ export const SIDE_ELEMENTS = [
 	{name: "Delete Device", link: "#", icon: "pe-7s-trash", 	selected: false},
 ];
 
-export const REST_DNS = "172.16.21.13:3000"
+export const REST_DNS = "192.168.0.8:3000"
 
 export const REST_SERVER_API = "http://"+REST_DNS+"/api";
 
