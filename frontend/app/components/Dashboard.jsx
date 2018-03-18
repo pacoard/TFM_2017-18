@@ -45,6 +45,25 @@ class Dashboard extends React.Component {
 		    <div className="row">
                 <div className="col-md-12">
                     <div className="row">
+                        <div className="col-lg-6 col-sm-12">
+                            <div className="card">
+                                <div className="content" >
+                                    <div className="row">
+                                        <div className="col-xs-4">
+                                            <img src="assets/img/hyperledger.png" width="100"/>
+                                        </div>
+                                        <div className="col-xs-4">
+                                            <img src="assets/img/hyperledger-composer.png" width="100"/>
+                                        </div>
+                                        <div className="col-xs-4">
+                                            <img src="assets/img/reactredux.png" width="100"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row">
                         <div className="col-lg-3 col-sm-6">
                             <div className="card">
                                 <div className="content">
@@ -135,8 +154,8 @@ class Dashboard extends React.Component {
                                         </div>
                                         <div className="col-xs-7">
                                             <div className="numbers">
-                                                <p>Last event</p>
-                                                Last event description
+                                                <p>Events</p>
+                                                Events are online
                                             </div>
                                         </div>
                                     </div>
@@ -149,6 +168,8 @@ class Dashboard extends React.Component {
                                 </div>
                             </div>
                         </div>
+
+
                     </div>
                 </div>
             </div>
