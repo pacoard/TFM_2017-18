@@ -38,7 +38,7 @@ AUX_FILE = 'auxfile.sh'
 JSON_OUTPUT = 'output.json'
 WEBAPP_REPOSITORY = 'https://github.com/pacoard/TFM_2017-18.git'
 # AWS parameters
-ELB_NAME = 'itmo544-elb'
+ELB_NAME = 'frontend-elb'
 ELB_DNS = '' # to be set when ELB is up and running
 
 AWS_KEY_PAIR = args.key_pair
@@ -50,10 +50,10 @@ if (args.iam_role):
 if (args.subnet_id):
 	SUBNET_ID = args.subnet_id
 # Autoscaling parameters
-AUTOSCALING_CONFIGURATION = 'itmo544-autoscaling-config'
-AUTOSCALING_GROUP = 'itmo544-autoscaling-group'
+AUTOSCALING_CONFIGURATION = 'frontend-autoscaling-config'
+AUTOSCALING_GROUP = 'frontend-autoscaling-group'
 
-BLOCKCHAIN_NETWORK_NAME = 'iot-biz-network'
+BLOCKCHAIN_NETWORK_NAME = 'diot-biz-network'
 
 # GLOBAL FUNCTIONS
 def execCommand(commandString):
@@ -67,30 +67,38 @@ def extractJSON():
 	os.remove(JSON_OUTPUT)
 	return jsondict
 
-# Create auxiliar file for commands to run when instances are created:
+# Create auxiliar file for commands to run when instances are created
 START_SH = (
 	'#!/bin/bash\n'
 	'cd /home/ubuntu/project/blockchain/' + BLOCKCHAIN_NETWORK_NAME + '\n'
 	'npm config set user 0\n'
 	'npm config set unsafe-perm true\n'
-	'npm install -g composer-cli\n'
-	'npm install -g composer-rest-server\n'
 	'composer archive create -t dir -n .\n'
 	'composer runtime install --card PeerAdmin@hlfv1 --businessNetworkName ' + BLOCKCHAIN_NETWORK_NAME + '\n'
 	'composer network start --card PeerAdmin@hlfv1 --networkAdmin admin --networkAdminEnrollSecret adminpw --archiveFile ' + BLOCKCHAIN_NETWORK_NAME + '@0.0.1.bna --file networkadmin.card\n'
 	'composer card import --file networkadmin.card\n'
 	'composer-rest-server -c admin@' + BLOCKCHAIN_NETWORK_NAME + ' -n never -w true\n')
+
 def createUserData(type):
-	fileData = (
-		'#!/bin/bash\n'
-		'cd /root\n'
-		#'echo ' + START_SH + ' > start.sh\n'
-		#'chmod +x start.sh\n'
-		'cd /root/fabric-tools\n'
-		'./startFabric.sh\n'
-		'./createPeerAdminCard.sh\n'
-		'cd /home/ubuntu\n'
-		'git clone ' + WEBAPP_REPOSITORY + ' project\n')
+	fileData = ''
+	if type == 'frontend':
+		fileData = (
+			'#!/bin/bash\n'
+			'cd /root/fabric-tools\n'
+			'./stopFabric.sh\n'
+			'./teardownFabric.sh\n'
+			'cd /home/ubuntu\n'
+			'git clone ' + WEBAPP_REPOSITORY + ' project\n'
+			'cd /home/ubuntu/project/frontend\n'
+			'\n')
+	else:
+		fileData = (
+			'#!/bin/bash\n'
+			'cd /root/fabric-tools\n'
+			'./startFabric.sh\n'
+			'./createPeerAdminCard.sh\n'
+			'cd /home/ubuntu\n'
+			'git clone ' + WEBAPP_REPOSITORY + ' project\n')
 	print('=============================== ' + type + ' USER DATA FILE ===============================\n')
 	print(fileData)
 	print('==============================================================================\n')
@@ -98,6 +106,7 @@ def createUserData(type):
 		f.write(fileData)
 	os.system('chmod +x ' + AUX_FILE)
 	return AUX_FILE
+
 
 ################################################
 #											   #
@@ -128,6 +137,65 @@ execCommand('aws ec2 describe-instances'
 			+ ' --filters Name=instance-id,Values=' + BLOCKCHAIN_INSTANCE_ID
 			+ ' > ' + JSON_OUTPUT)
 BLOCKCHAIN_DNS = extractJSON()['Reservations'][0]['Instances'][0]['PublicDnsName']
+print('==============================================================================\n')
+print('Execute as root user: \n')
+print(START_SH)
+print('==============================================================================\n')
+
+
+################################################
+#											   #
+# 	FRONTEND				                   #
+#											   #
+################################################
+'''
+# Autoscaling launch configuration
+execCommand('aws autoscaling create-launch-configuration'
+			+ ' --launch-configuration-name ' + AUTOSCALING_CONFIGURATION
+			+ ' --key-name ' + AWS_KEY_PAIR
+			+ ' --security-groups ' + SECURITY_GROUP
+			+ ' --iam-instance-profile ' + IAM_ROLE
+			+ ' --image-id ' + AMI_ID
+			+ ' --instance-type t2.micro'
+			+ ' --user-data file://' + createUserData('FRONTEND'))
+
+# Autoscaling group creation
+execCommand('aws autoscaling create-auto-scaling-group'
+			+ ' --auto-scaling-group-name ' + AUTOSCALING_GROUP
+			+ ' --launch-configuration-name ' + AUTOSCALING_CONFIGURATION
+			+ ' --availability-zones ' + AVAILABILITY_ZONE + 'a'
+			+ ' --desired-capacity 3'
+			+ ' --min-size 1'
+			+ ' --max-size 3'
+			+ ' --vpc-zone-identifier ' + SUBNET_ID)
+
+# Load balancer creation, with listener for the webapp
+execCommand('aws elb create-load-balancer'
+			+ ' --load-balancer-name ' + ELB_NAME
+			+ ' --listeners "Protocol=HTTP,LoadBalancerPort=80,InstanceProtocol=HTTP,InstancePort=8000"'
+			+ ' --availability-zones ' + AVAILABILITY_ZONE + 'a'
+			+ ' --security-groups ' + SECURITY_GROUP
+			+ ' > ' + JSON_OUTPUT)
+
+ELB_DNS = extractJSON()['DNSName'] # get ELB's DNS in order to access the service
+
+# Attach load balancer to the autoscaling group
+execCommand('aws autoscaling attach-load-balancers'
+			+ ' --load-balancer-names ' + ELB_NAME
+			+ ' --auto-scaling-group-name ' + AUTOSCALING_GROUP)
+
+# Create load balancer stickiness policy
+execCommand('aws elb create-lb-cookie-stickiness-policy'
+			+ ' --load-balancer-name ' + ELB_NAME
+			+ ' --policy-name my-duration-cookie-policy'
+			+ ' --cookie-expiration-period 60')
+
+# Set policy
+execCommand('aws elb set-load-balancer-policies-of-listener'
+			+ ' --load-balancer-name ' + ELB_NAME
+			+ ' --load-balancer-port 80'
+			+ ' --policy-names my-duration-cookie-policy')
+'''
 
 ################################################
 #											   #
