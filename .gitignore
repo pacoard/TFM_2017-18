@@ -1,3 +1,5 @@
 # General files
 *.docx
+.idea/
+auxfile.sh
 
