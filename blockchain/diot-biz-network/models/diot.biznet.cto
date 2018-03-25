@@ -56,7 +56,8 @@ transaction DeleteActuator {
   --> DeviceOwner deviceOwner
 }
 transaction SensorReading {
-  o Reading reading
+  //o Reading reading
+  o Double value
   --> Sensor sensor
   --> DeviceOwner deviceOwner
 }
@@ -96,7 +97,7 @@ event LogEvent {
  */
 concept Reading {
     o DateTime timestamp
-    o Integer value
+    o Double value
 }
 enum DeviceType {
   o SENSOR

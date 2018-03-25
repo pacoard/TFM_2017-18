@@ -117,12 +117,14 @@ function SensorReading(tx) {
         .then(function(sensor) {
             if (!sensor.data) {
                 sensor.data = [factory.newConcept('diot.biznet', 'Reading')];
-                sensor.data[0].value = tx.reading.value;
-                sensor.data[0].timestamp = tx.reading.timestamp;
+                sensor.data[0].value = tx.value;
+                //sensor.data[0].timestamp = (new Date()).toISOString();
+                sensor.data[0].timestamp = tx.timestamp;
             } else {
                 newData = factory.newConcept('diot.biznet', 'Reading');
-                newData.value = tx.reading.value;
-                newData.timestamp = tx.reading.timestamp;
+                newData.value = tx.value;
+                //newData.timestamp = (new Date()).toISOString();
+                newData.timestamp = tx.timestamp;
                 sensor.data.push(newData);
             }
             // Update the asset in the asset registry
@@ -132,12 +134,12 @@ function SensorReading(tx) {
         })
         .then(function() {
             // If the sensor's threshold is surpassed, emit an event
-            if (t_sensor.eventThreshold && tx.reading.value > t_sensor.eventThreshold) {
+            if (t_sensor.eventThreshold && tx.value > t_sensor.eventThreshold) {
                 var eventThreshold = factory.newEvent('diot.biznet', 'SensorEvent');
                 eventThreshold.sensorId = id;
                 eventThreshold.ownerEmail = tx.deviceOwner.email;
                 eventThreshold.msg = 'Sensor with ID ' + id 
-                    + ' triggered an alarm: ' + tx.reading.value.toString() + ' ' + t_sensor.unit;
+                    + ' triggered an alarm: ' + tx.value.toString() + ' ' + t_sensor.unit;
                 emit(eventThreshold);
             }
         });
