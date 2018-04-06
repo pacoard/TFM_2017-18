@@ -76,7 +76,7 @@ def createUserData():
 		'cp /home/ubuntu/node_modules -r .\n'
 		# PASSING DATA BY REPLACING VALUES IN THE SERVER SOURCE FILES
 # ubuntu@ip-172-31-46-186:~$ sed -i "s/t_HOSTNAME/$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)/g" package.json webpack.config.js
-		'sed -i "s/t_HOSTNAME/public-hostname/g" package.json webpack.config.js\n'
+		'sed -i "s/t_HOSTNAME/localhost/g" package.json webpack.config.js\n'
 		"sed -i 's/t_BLOCKCHAIN_DNS/"+ BLOCKCHAIN_DNS.replace('/', '\/') +"/g' app/constants/constants.jsx\n"
 		'npm start\n')
 	print('=============================== FRONTEND USER DATA FILE ===============================\n')
