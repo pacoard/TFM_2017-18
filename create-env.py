@@ -16,7 +16,7 @@ startTime = datetime.now()
 
 parser = argparse.ArgumentParser(description="Script that automates the creation of Blockchain+IoT project.")
 # python create-env.py --key-pair 1 --security-group 2 --subnet-id 3 --iam-role 4
-parser.add_argument('--composer-instance-id', '-cid', required=True, help="ID of the EC2 instance that runs the blockchain. ")
+parser.add_argument('--composer-instance-id', '-cid', required=False, help="ID of the EC2 instance that runs the blockchain. ")
 parser.add_argument('--key-pair', '-key', required=True, help="Name of the key pair to access the instances.")
 parser.add_argument('--security-group', '-secgroup', required=True, help="ID of the security group that the instances will be in. Needs to open port 8000.")
 parser.add_argument('--subnet-id', '-subnetid', required=True, help="ID of the subnet for the autoscaling group. You need to use the one assigned to us-east-2a.")
@@ -51,7 +51,7 @@ AUTOSCALING_GROUP = 'diot-frontend-autoscaling-group'
 
 # Blockchain paramenters
 BLOCKCHAIN_NETWORK_NAME = 'diot-biz-network'
-BLOCKCHAIN_INSTANCE_ID = args.composer_instance_id
+BLOCKCHAIN_INSTANCE_ID = 'i-0bfba0dd9763a17c8' #args.composer_instance_id
 BLOCKCHAIN_DNS = '' # to be retrieved from blockchain's EC2 instance
 
 # GLOBAL FUNCTIONS
@@ -75,8 +75,9 @@ def createUserData():
 		'cd diot/frontend/\n'
 		'cp /home/ubuntu/node_modules -r .\n'
 		# PASSING DATA BY REPLACING VALUES IN THE SERVER SOURCE FILES
-# ubuntu@ip-172-31-46-186:~$ sed -i "s/t_HOSTNAME/$(curl -s http://169.254.169.254/lest/meta-data/public-hostname)/g" package.json webpack.config.js
-		"sed -i 's/t_/\""+ BLOCKCHAIN_DNS.replace('/', '\/') +"\"/g' server.js\n"
+# ubuntu@ip-172-31-46-186:~$ sed -i "s/t_HOSTNAME/$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)/g" package.json webpack.config.js
+		'sed -i "s/t_HOSTNAME/$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)/g" package.json webpack.config.js\n'
+		"sed -i 's/t_BLOCKCHAIN_DNS/"+ BLOCKCHAIN_DNS.replace('/', '\/') +"/g' app/constants/constants.jsx\n"
 		'npm start\n')
 	print('=============================== FRONTEND USER DATA FILE ===============================\n')
 	print(fileData)
@@ -120,9 +121,9 @@ execCommand('aws autoscaling create-auto-scaling-group'
 			+ ' --auto-scaling-group-name ' + AUTOSCALING_GROUP
 			+ ' --launch-configuration-name ' + AUTOSCALING_CONFIGURATION
 			+ ' --availability-zones ' + AVAILABILITY_ZONE + 'a'
-			+ ' --desired-capacity 3'
+			+ ' --desired-capacity 2'
 			+ ' --min-size 1'
-			+ ' --max-size 3'
+			+ ' --max-size 2'
 			+ ' --vpc-zone-identifier ' + SUBNET_ID)
 
 print('####################################################################################\n')
@@ -178,7 +179,9 @@ print('\n')
 # 	END OF SCRIPT			                   #
 #											   #
 ################################################
-
+print('Waiting for the service to get up and running...')
+execCommand('aws elb wait any-instance-in-service'
+			' --load-balancer-name ' + ELB_NAME)
 print('The service is ready to use. Go to the browser and use the ELB DNS address: \n')
 print(ELB_DNS+'\n')
 print('The blockchain\'s DNS address is: \n')

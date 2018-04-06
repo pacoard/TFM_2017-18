@@ -10,7 +10,7 @@ const config = {
 
   entry: [
     'react-hot-loader/patch',
-    'webpack-dev-server/client?http://t_HOSTNAME:8080',
+    'webpack-dev-server/client?http://t_HOSTNAME:3000',
     'webpack/hot/only-dev-server',
     './main.js'
   ],
