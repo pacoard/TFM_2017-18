@@ -45,21 +45,6 @@ execCommand('aws autoscaling delete-auto-scaling-group'
 execCommand('aws autoscaling delete-launch-configuration'
 			+ ' --launch-configuration-name ' + AUTOSCALING_CONFIGURATION)
 
-'''
-# Other EC2 instances
-execCommand('aws ec2 describe-instances' 
-			+ ' --filters Name=image-id,Values=' + AMI_ID
-			+ ' > ' + JSON_OUTPUT)
-ec2_instance_ids = [] # should be just one
-for r in extractJSON()['Reservations']:
-	ec2_instance_ids.append(r['Instances'][0]['InstanceId'])
-
-execCommand('aws ec2 terminate-instances'
-			+ ' --instance-ids ' + ' '.join(ec2_instance_ids))
-'''
-
-######################## WAITERS ########################
-
 print('####################################################################################\n')
 print('####################################################################################\n')
 print('####################################################################################\n')

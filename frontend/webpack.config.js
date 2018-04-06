@@ -10,7 +10,7 @@ const config = {
 
   entry: [
     'react-hot-loader/patch',
-    'webpack-dev-server/client?http://t_HOSTNAME:3000',
+    //'webpack-dev-server/client?http://t_HOSTNAME:3000',
     'webpack/hot/only-dev-server',
     './main.js'
   ],
@@ -25,6 +25,9 @@ const config = {
 
   devServer: {
     hot: true,
+    disableHostCheck: true,
+    host: t_HOSTNAME,
+    port: 3000,
     contentBase: resolve(__dirname, 'app'),
     publicPath: '/'
   },
