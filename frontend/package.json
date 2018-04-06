@@ -4,7 +4,7 @@
   "description": "Blockchain-based smart home management powered by React+Redux and Hyperledger",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server",
+    "start": "webpack-dev-server --host t_HOSTNAME --port 3000",
     "clean": "rimraf dist",
     "production": "cross-env npm run clean && webpack --config webpack.production.config.js --progress --profile --colors",
     "lint": "eslint --fix **/*.js **/*.jsx **/*.es6 --ignore-pattern node_modules/ --ignore-pattern dist",
@@ -39,6 +39,7 @@
     "react": "^16.2.0",
     "react-cookies": "^0.1.0",
     "react-dom": "^16.2.0",
+    "react-highcharts": "^16.0.2",
     "react-hot-loader": "3.1.1",
     "react-router-dom": "4.2.0",
     "react-websocket": "^2.0.0",
