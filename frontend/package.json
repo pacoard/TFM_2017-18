@@ -4,7 +4,7 @@
   "description": "Blockchain-based smart home management powered by React+Redux and Hyperledger",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --host t_HOSTNAME --port 3000",
+    "start": "webpack-dev-server --host t_HOSTNAME --port 3000 --disable-host-check",
     "clean": "rimraf dist",
     "production": "cross-env npm run clean && webpack --config webpack.production.config.js --progress --profile --colors",
     "lint": "eslint --fix **/*.js **/*.jsx **/*.es6 --ignore-pattern node_modules/ --ignore-pattern dist",

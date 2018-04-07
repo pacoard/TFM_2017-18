@@ -26,8 +26,8 @@ const config = {
   devServer: {
     hot: true,
     disableHostCheck: true,
-    //host: t_HOSTNAME,
-    //port: 3000,
+    host: "t_HOSTNAME",
+    port: 3000,
     contentBase: resolve(__dirname, 'app'),
     publicPath: '/'
   },
