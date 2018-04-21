@@ -7,48 +7,23 @@ String temperatureSensor() {
   //the calculating formula of temperature
   float resistor = (1023.0*10000)/analogRead(thermistorPin)-10000;
   float tempC = (3435.0/(log(resistor/10000)+(3435.0/(273.15+25)))) - 273.15;
-
-  /*Serial.print("Temperature: ");
-  Serial.print(tempC);
-  Serial.println(" C");*/
-
   return String(tempC);
 }
 
-// Light sensor // https://learn.adafruit.com/photocells/arduino-code
-//https://www.digikey.com/en/maker/projects/design-a-luxmeter-with-an-ldr-and-an-arduino/623aeee0f93e427bb57e02c4592567d1
-const int photocellPin = 0;     // the cell and 10K pulldown are connected to a0
-int photocellReading;     // the analog reading from the sensor divider
-int LEDbrightness;        // 
+// Light sensor ///https://www.digikey.com/en/maker/projects/design-a-luxmeter-with-an-ldr-and-an-arduino/623aeee0f93e427bb57e02c4592567d1
+const int photocellPin = 0;     /
+int photocellReading;
+int LEDbrightness; 
 String lightSensor() {
   photocellReading = analogRead(photocellPin);
-  /*if (photocellReading < 10) {
-    Serial.println(" - Dark");
-  } else if (photocellReading < 200) {
-    Serial.println(" - Dim");
-  } else if (photocellReading < 500) {
-    Serial.println(" - Light");
-  } else if (photocellReading < 800) {
-    Serial.println(" - Bright");
-  } else {
-    Serial.println(" - Very bright");
-  }
-  delay(1000);*/
-  /*Serial.print("Brightness: ");
-  Serial.print(photocellReading); 
-  //Serial.println(" C"); // Print the unit of the centigrade temperature to the LCD.
-  Serial.println();*/
-
   return String(photocellReading);
 }
-
 
 // Distance sensor https://howtomechatronics.com/tutorials/arduino/ultrasonic-sensor-hc-sr04/
 const int trigPin = 3;
 const int echoPin = 2;
 long duration;
 int distance;
-
 String distanceSensor() {
   // Clears the trigPin
   digitalWrite(trigPin, LOW);
@@ -61,11 +36,6 @@ String distanceSensor() {
   duration = pulseIn(echoPin, HIGH);
   // Calculating the distance in cm
   distance= duration*0.034/2 + 2; //seems to give 2cm less
-  // Prints the distance on the Serial Monitor
-  /*Serial.print("Distance: ");
-  Serial.print(distance);
-  Serial.println(" cm");*/
-
   return String(distance);
 }
 
@@ -123,21 +93,10 @@ void setup() {
   Serial.print("client is at ");
   Serial.println(Ethernet.localIP());
   delay(1000); // wait for initialization*/
-
-  // Connect to the blockchain server
-  /*if (client.connect(server, 3000)) {
-    Serial.println("Connected");
-  } else {
-    Serial.println("Connection failed.");
-    Serial.print("Hang on failure...");
-    while(1) {
-      // Hang on failure
-    }
-  }*/
-  
 }
 
 void loop() {
+  // Connect to the blockchain server
   if (client.connect(server, 3000)) {
     sendJSON("temp", temperatureSensor());
     delay(1000);
@@ -149,14 +108,7 @@ void loop() {
   } else {
     // if you didn't get a connection to the server:
     Serial.println("connection failed");
-   /* Serial.println("Connection failed");
-    if (client.connect(server, 3000)) {
-      Serial.println("Connected");
-    } else {
-      Serial.println("Connection failed.");
-    }*/
   }
-
   //Wait some seconds for next measurement
   delay(5000);
 }
