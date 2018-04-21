@@ -188,8 +188,8 @@ class SensorGraph extends React.Component {
 			return result.json();
 		}).then(data => {
 			// The result will always be an array with one entry
-			let title = 'Device \"'+t_deviceId+'\" readings';
 			let sensor = data[0];
+			let title = 'Device \"'+t_deviceId+'\" readings in ' + sensor.unit;
 			let dataPoints = [];
 			try {
 				sensor.data.forEach((p) => {
@@ -253,11 +253,10 @@ class SensorGraph extends React.Component {
 						<div className="footer">
 							<div className="chart-legend">
 								<i className="fa fa-circle text-info"></i> {this.state.unit}
-								<i className="fa fa-circle text-warning"></i> BMW 5 Series
 							</div>
 							<hr/>
 							<div className="stats">
-								<i className="ti-check"></i> Data information certified
+								<i className="ti-check"></i> Updated just now
 							</div>
 						</div>
 					</div>

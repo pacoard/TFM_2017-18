@@ -111,7 +111,7 @@ class Footer extends React.Component {
                     </ul>
                 </nav>
 				<div className="copyright pull-right">
-                    &copy; {date}, made with  by <a href="http://www.github.com/pacoard">Paco</a>
+                    &copy; {date}, made by <a href="http://www.github.com/pacoard">Paco</a>
                 </div>
             </div>
         </footer>

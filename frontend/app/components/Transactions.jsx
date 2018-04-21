@@ -251,6 +251,7 @@ export class EditActuatorModalForm extends React.Component {
 
     handleSubmit(event) {
         // Submit transaction
+        event.preventDefault();
         let url = REST_SERVER_API + '/ActuatorWrite';
         console.log('Fetching URL: '+url);
 
@@ -313,6 +314,7 @@ export class EditActuatorModalForm extends React.Component {
                                     <label htmlFor="state">State</label>
                                     <input type="text" className="form-control" placeholder="State"
                                            value={this.state.stateValue}
+                                           onKeyPress={e => { if (e.key === 'Enter') this.handleSubmit(e);}}
                                            onChange={this.handleStateValueChange}/>
                                 </div>
                             </div>

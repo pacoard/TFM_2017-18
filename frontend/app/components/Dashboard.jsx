@@ -45,7 +45,7 @@ class Dashboard extends React.Component {
 		    <div className="row">
                 <div className="col-md-12">
                     <div className="row">
-                        <div className="col-lg-6 col-sm-12">
+                        <div className="col-lg-12 col-sm-12">
                             <div className="card">
                                 <div className="content" >
                                     <div className="row">
