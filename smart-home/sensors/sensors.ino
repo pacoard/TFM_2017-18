@@ -11,7 +11,7 @@ String temperatureSensor() {
 }
 
 // Light sensor ///https://www.digikey.com/en/maker/projects/design-a-luxmeter-with-an-ldr-and-an-arduino/623aeee0f93e427bb57e02c4592567d1
-const int photocellPin = 0;     /
+const int photocellPin = 0;
 int photocellReading;
 int LEDbrightness; 
 String lightSensor() {
@@ -46,7 +46,7 @@ byte mac[] = {
 IPAddress ip(192, 168, 137, 92); //192.168.137.66
 EthernetClient client;
 
-char server[] = "ec2-18-188-237-183.us-east-2.compute.amazonaws.com"; 
+char server[] = "ec2-18-188-222-133.us-east-2.compute.amazonaws.com"; 
 
 String json;
 void sendJSON(String sensor, String measure) {
@@ -99,16 +99,14 @@ void loop() {
   // Connect to the blockchain server
   if (client.connect(server, 3000)) {
     sendJSON("temp", temperatureSensor());
-    delay(1000);
+    delay(5000);
     sendJSON("light", lightSensor());
-    delay(1000);
+    delay(5000);
     sendJSON("distance", distanceSensor());
-    delay(1000);
+    delay(5000);
     client.stop();
   } else {
-    // if you didn't get a connection to the server:
     Serial.println("connection failed");
   }
-  //Wait some seconds for next measurement
-  delay(5000);
+  delay(30000);
 }
